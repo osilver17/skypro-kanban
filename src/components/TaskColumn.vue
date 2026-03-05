@@ -1,5 +1,5 @@
 <script setup>
-import TaskCardCopy from './TaskCardCopy.vue'
+import TaskCardCopyWriting from './TaskCardCopyWriting.vue'
 import TaskCardResearch from './TaskCardResearch.vue'
 import TaskCardWeb from './TaskCardWeb.vue'
 
@@ -18,7 +18,7 @@ import TaskCardWeb from './TaskCardWeb.vue'
 
             <TaskCardWeb />
 
-            <TaskCardCopy />
+            <TaskCardCopyWriting />
 
             <TaskCardWeb />
         </div>
@@ -38,7 +38,7 @@ import TaskCardWeb from './TaskCardWeb.vue'
         <div class="cards">
             <TaskCardResearch />
 
-            <TaskCardCopy />
+            <TaskCardCopyWriting />
 
             <TaskCardWeb />
         </div>
