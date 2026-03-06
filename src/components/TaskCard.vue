@@ -1,13 +1,15 @@
 <script setup>
-// import HomeView from '@/views/HomeView.vue'
+defineProps({
+    classColor: String,
+})
 </script>
 
 <template>
     <div class="cards__item">
         <div class="cards__card card">
             <div class="card__group">
-                <div class="card__theme _purple">
-                    <p class="_purple">Copywriting</p>
+                <div :class="['card__theme', classColor]">
+                    <p :class="classColor"><slot></slot></p>
                 </div>
                 <a href="#popBrowse" target="_self">
                     <div class="card__btn">

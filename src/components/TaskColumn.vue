@@ -1,9 +1,5 @@
 <script setup>
-import TaskCardCopyWriting from './TaskCardCopyWriting.vue'
-import TaskCardResearch from './TaskCardResearch.vue'
-import TaskCardWeb from './TaskCardWeb.vue'
-
-// import HomeView from '@/views/HomeView.vue'
+import TaskCard from './TaskCard.vue'
 </script>
 
 <template>
@@ -11,16 +7,17 @@ import TaskCardWeb from './TaskCardWeb.vue'
         <div class="column__title">
             <p>Без статуса</p>
         </div>
-        <div class="cards">
-            <TaskCardWeb />
 
-            <TaskCardResearch />
+        <div>
+            <TaskCard classColor="_orange">Web Design</TaskCard>
 
-            <TaskCardWeb />
+            <TaskCard classColor="_green">Research</TaskCard>
 
-            <TaskCardCopyWriting />
+            <TaskCard classColor="_orange">Web Design</TaskCard>
 
-            <TaskCardWeb />
+            <TaskCard classColor="_purple">Copywriting</TaskCard>
+
+            <TaskCard classColor="_orange">Web Design</TaskCard>
         </div>
     </div>
     <div class="main__column">
@@ -28,7 +25,7 @@ import TaskCardWeb from './TaskCardWeb.vue'
             <p>Нужно сделать</p>
         </div>
         <div class="cards">
-            <TaskCardResearch />
+            <TaskCard classColor="_green">Research</TaskCard>
         </div>
     </div>
     <div class="main__column">
@@ -36,11 +33,11 @@ import TaskCardWeb from './TaskCardWeb.vue'
             <p>В работе</p>
         </div>
         <div class="cards">
-            <TaskCardResearch />
+            <TaskCard classColor="_green">Research</TaskCard>
 
-            <TaskCardCopyWriting />
+            <TaskCard classColor="_purple">Copywriting</TaskCard>
 
-            <TaskCardWeb />
+            <TaskCard classColor="_orange">Web Design</TaskCard>
         </div>
     </div>
     <div class="main__column">
@@ -48,7 +45,7 @@ import TaskCardWeb from './TaskCardWeb.vue'
             <p>Тестирование</p>
         </div>
         <div class="cards">
-            <TaskCardResearch />
+            <TaskCard classColor="_green">Research</TaskCard>
         </div>
     </div>
     <div class="main__column">
@@ -56,7 +53,7 @@ import TaskCardWeb from './TaskCardWeb.vue'
             <p>Готово</p>
         </div>
         <div class="cards">
-            <TaskCardResearch />
+            <TaskCard classColor="_green">Research</TaskCard>
         </div>
     </div>
 </template>
