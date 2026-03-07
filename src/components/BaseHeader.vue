@@ -1,5 +1,9 @@
 <script setup>
-// import HomeView from '@/views/HomeView.vue'
+import { ref } from 'vue'
+const display = ref('none')
+function showElem() {
+    display.value = 'block'
+}
 </script>
 
 <template>
@@ -19,8 +23,8 @@
                 <button class="header__btn-main-new _hover01" id="btnMainNew">
                     <a href="#popNewCard">Создать новую задачу</a>
                 </button>
-                <a href="#user-set-target" class="header__user _hover02">Ivan Ivanov</a>
-                <div class="header__pop-user-set pop-user-set" id="user-set-target">
+                <a href="#" class="header__user _hover02" @click="showElem">Ivan Ivanov</a>
+                <div class="header__pop-user-set pop-user-set" :style="{ display: display }">
                     <!-- <a href="">x</a> -->
                     <p class="pop-user-set__name">Ivan Ivanov</p>
                     <p class="pop-user-set__mail">ivan.ivanov@gmail.com</p>
@@ -37,4 +41,19 @@
     </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.header__pop-user-set {
+    position: absolute;
+    top: 61px;
+    right: 0;
+    width: 213px;
+    height: 205px;
+    border-radius: 10px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    background: #fff;
+    box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
+    padding: 34px;
+    text-align: center;
+    z-index: 2;
+}
+</style>
