@@ -1,12 +1,12 @@
 
-export const cardsNoStatus = [
+export const cardsAllStatus = [
     {
         id: 0,
         topic: 'Web Design',
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_NoStatus',
     },
 
     {
@@ -15,7 +15,7 @@ export const cardsNoStatus = [
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_NoStatus',
     },
 
     {
@@ -24,7 +24,7 @@ export const cardsNoStatus = [
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_NoStatus',
     },
 
     {
@@ -33,7 +33,7 @@ export const cardsNoStatus = [
         classColor: "_purple",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_NoStatus',
     },
 
     {
@@ -42,68 +42,60 @@ export const cardsNoStatus = [
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_NoStatus',
     },
-]
 
-export const cardsNeedToDo = [
     {
-        id: 0,
+        id: 5,
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Нужно сделать',
+        status: 'card_NeedToDo',
     },
-]
 
-export const cardsInWork = [
     {
-        id: 0,
+        id: 6,
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'В работе',
+        status: 'card_InWork',
     },
 
     {
-        id: 1,
+        id: 7,
         topic: 'Copywriting',
         classColor: "_purple",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_InWork',
     },
 
     {
-        id: 2,
+        id: 8,
         topic: 'Web Design',
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Без статуса',
+        status: 'card_InWork',
     },
-]
 
-export const cardsTesting = [
     {
-        id: 0,
+        id: 9,
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Тестирование',
+        status: 'card_InTest',
     },
-]
 
-export const cardsDone = [
     {
-        id: 0,
+        id: 10,
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'Готово',
+        status: 'card_Done',
     },
 ]

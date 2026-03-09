@@ -21,7 +21,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <PreLoader v-if="loading"></PreLoader>
+    <PreLoader v-if="loading" />
     <div v-else class="wrapper">
         <!-- pop-up start-->
 

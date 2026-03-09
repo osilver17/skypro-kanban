@@ -1,6 +1,12 @@
 <script setup>
 import TaskCard from './TaskCard.vue'
-import { cardsNoStatus, cardsNeedToDo, cardsInWork, cardsTesting, cardsDone } from '@/mocks/tasks'
+import { cardsAllStatus } from '@/mocks/tasks'
+
+const cardsNoStatus = cardsAllStatus.filter((item) => item.status == 'card_NoStatus')
+const cardsNeedToDo = cardsAllStatus.filter((item) => item.status == 'card_NeedToDo')
+const cardsInWork = cardsAllStatus.filter((item) => item.status == 'card_InWork')
+const cardsTesting = cardsAllStatus.filter((item) => item.status == 'card_InTest')
+const cardsDone = cardsAllStatus.filter((item) => item.status == 'card_Done')
 </script>
 
 <template>
