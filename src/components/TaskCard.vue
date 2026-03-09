@@ -1,6 +1,8 @@
 <script setup>
 defineProps({
     classColor: String,
+    date: String,
+    topic: String,
 })
 </script>
 
@@ -9,7 +11,7 @@ defineProps({
         <div class="cards__card card">
             <div class="card__group">
                 <div :class="['card__theme', classColor]">
-                    <p :class="classColor"><slot></slot></p>
+                    <p :class="classColor">{{ topic }}</p>
                 </div>
                 <a href="#popBrowse" target="_self">
                     <div class="card__btn">
@@ -21,7 +23,7 @@ defineProps({
             </div>
             <div class="card__content">
                 <a href="" target="_blank">
-                    <h3 class="card__title">Название задачи</h3>
+                    <h3 class="card__title"><slot></slot></h3>
                 </a>
                 <div class="card__date">
                     <svg
@@ -52,7 +54,7 @@ defineProps({
                             </clipPath>
                         </defs>
                     </svg>
-                    <p>30.10.23</p>
+                    <p>{{ date }}</p>
                 </div>
             </div>
         </div>

@@ -4,10 +4,25 @@ import BaseHeader from '@/components/BaseHeader.vue'
 import NewCardModal from '@/components/NewCardModal.vue'
 import ExitModal from '@/components/ExitModal.vue'
 import TaskModal from '@/components/TaskModal.vue'
+import PreLoader from '@/components/PreLoader.vue'
+import { ref, onMounted } from 'vue'
+
+const loading = ref(true)
+// onMounted вызывается один раз
+onMounted(() => {
+    console.log('onMounted запущен')
+
+    // Через 3 секунды значение станет false
+    setTimeout(() => {
+        loading.value = false
+        console.log('setTimeout отработал. loading.value =', loading.value)
+    }, 3000)
+})
 </script>
 
 <template>
-    <div class="wrapper">
+    <PreLoader v-if="loading"></PreLoader>
+    <div v-else class="wrapper">
         <!-- pop-up start-->
 
         <div class="pop-exit" id="popExit">
