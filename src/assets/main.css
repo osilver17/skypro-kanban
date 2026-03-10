@@ -51,13 +51,6 @@ body {
     background-color: #f1f1f1;
 }
 
-.container {
-    max-width: 1260px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 30px;
-}
-
 ._hover01:hover {
     background-color: #33399b;
 }
@@ -412,15 +405,6 @@ body {
     width: 100%;
     background-color: #eaeef6;
 }
-.main__block {
-    width: 100%;
-    margin: 0 auto;
-    padding: 25px 0 49px;
-}
-.main__content {
-    width: 100%;
-    display: flex;
-}
 
 .cards {
     width: 100%;
@@ -429,15 +413,6 @@ body {
 }
 
 @media screen and (max-width: 1200px) {
-    .main__block {
-        width: 100%;
-        margin: 0 auto;
-        padding: 40px 0 64px;
-    }
-    .main__content {
-        display: block;
-    }
-
     .cards {
         width: 100%;
         display: flex;
@@ -495,11 +470,6 @@ body {
 @media screen and (max-width: 495px) {
     .pop-new-card__calendar {
         width: 100%;
-    }
-
-    .container {
-        width: 100%;
-        padding: 0 16px;
     }
 
     .pop-browse__block {

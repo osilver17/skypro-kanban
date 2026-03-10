@@ -7,39 +7,50 @@ function showElem() {
 </script>
 
 <template>
-    <div class="header__block">
-        <div class="header__logo _show _light">
-            <a href="" target="_self"
-                ><img src="../../public/assets/images/logo.png" alt="logo"
-            /></a>
-        </div>
-        <div class="header__logo _dark">
-            <a href="" target="_self"
-                ><img src="../../public/assets/images/logo_dark.png" alt="logo"
-            /></a>
-        </div>
-        <nav class="header__nav">
-            <button class="header__btn-main-new _hover01" id="btnMainNew">
-                <a href="#popNewCard">Создать новую задачу</a>
-            </button>
-            <a href="#" class="header__user _hover02" @click="showElem">Ivan Ivanov</a>
-            <div class="header__pop-user-set pop-user-set" :style="{ display: display }">
-                <!-- <a href="">x</a> -->
-                <p class="pop-user-set__name">Ivan Ivanov</p>
-                <p class="pop-user-set__mail">ivan.ivanov@gmail.com</p>
-                <div class="pop-user-set__theme">
-                    <p>Темная тема</p>
-                    <input type="checkbox" class="checkbox" name="checkbox" />
+    <header class="header">
+        <div class="container">
+            <div class="header__block">
+                <div class="header__logo _show _light">
+                    <a href="" target="_self"
+                        ><img src="../../public/assets/images/logo.png" alt="logo"
+                    /></a>
                 </div>
-                <button type="button" class="_hover03">
-                    <a href="#popExit">Выйти</a>
-                </button>
+                <div class="header__logo _dark">
+                    <a href="" target="_self"
+                        ><img src="../../public/assets/images/logo_dark.png" alt="logo"
+                    /></a>
+                </div>
+                <nav class="header__nav">
+                    <button class="header__btn-main-new _hover01" id="btnMainNew">
+                        <a href="#popNewCard">Создать новую задачу</a>
+                    </button>
+                    <a href="#" class="header__user _hover02" @click="showElem">Ivan Ivanov</a>
+                    <div class="header__pop-user-set pop-user-set" :style="{ display: display }">
+                        <!-- <a href="">x</a> -->
+                        <p class="pop-user-set__name">Ivan Ivanov</p>
+                        <p class="pop-user-set__mail">ivan.ivanov@gmail.com</p>
+                        <div class="pop-user-set__theme">
+                            <p>Темная тема</p>
+                            <input type="checkbox" class="checkbox" name="checkbox" />
+                        </div>
+                        <button type="button" class="_hover03">
+                            <a href="#popExit">Выйти</a>
+                        </button>
+                    </div>
+                </nav>
             </div>
-        </nav>
-    </div>
+        </div>
+    </header>
 </template>
 
 <style scoped>
+.container {
+    max-width: 1260px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
 .header__block {
     height: 70px;
     display: flex;
@@ -224,6 +235,13 @@ function showElem() {
         height: 40px;
         border-radius: 4px;
         margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 495px) {
+    .container {
+        width: 100%;
+        padding: 0 16px;
     }
 }
 </style>

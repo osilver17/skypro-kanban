@@ -29,22 +29,12 @@ onMounted(() => {
 
         <NewCardModal />
 
-        <div class="pop-browse" id="popBrowse">
-            <div class="pop-browse__container">
-                <TaskModal />
-            </div>
-        </div>
+        <TaskModal />
 
-        <header class="header">
-            <div class="container">
-                <BaseHeader />
-            </div>
-        </header>
+        <BaseHeader />
 
         <main class="main">
-            <div class="container">
-                <TaskDesk />
-            </div>
+            <TaskDesk />
         </main>
     </div>
 </template>
