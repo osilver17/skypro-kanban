@@ -36,6 +36,11 @@
     left: 0;
     z-index: 5;
 }
+
+.pop-exit:target {
+    display: block;
+}
+
 .pop-exit__container {
     width: 100%;
     height: 100%;
@@ -47,6 +52,7 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.4);
 }
+
 .pop-exit__block {
     display: block;
     margin: 0 auto;
@@ -120,5 +126,28 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+._hover01:hover {
+    background-color: #33399b;
+}
+
+@media only screen and (max-width: 375px) {
+    .pop-exit__block {
+        padding: 50px 20px;
+    }
+    .pop-exit__exit-yes {
+        width: 100%;
+        height: 40px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .pop-exit__exit-no {
+        width: 100%;
+        height: 40px;
+    }
+    .pop-exit__form-group {
+        display: block;
+    }
 }
 </style>
