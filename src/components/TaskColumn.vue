@@ -1,12 +1,29 @@
 <script setup>
 import TaskCard from './TaskCard.vue'
-import { cardsAllStatus } from '@/mocks/tasks'
 
-const cardsNoStatus = cardsAllStatus.filter((item) => item.status === 'card_NoStatus')
-const cardsNeedToDo = cardsAllStatus.filter((item) => item.status === 'card_NeedToDo')
-const cardsInWork = cardsAllStatus.filter((item) => item.status === 'card_InWork')
-const cardsTesting = cardsAllStatus.filter((item) => item.status === 'card_InTest')
-const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
+const cardsStatus = ['card_NoStatus', 'card_NeedToDo', 'card_InWork', 'card_InTest', 'card_Done']
+
+// Для отображения задач нужно раскомментировать строки 7, 8 и закомментировать 9-ю
+// import { cardsAllStatus } from '@/mocks/tasks'
+// const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
+const statusArrays = tasksDistributionByColumns(cardsStatus)
+
+function tasksDistributionByColumns(statusArr, taskArr = []) {
+    const statusArrays = []
+    statusArr.forEach((element, id) => {
+        statusArrays[id] = taskArr.filter((item) => item.status === element)
+        if (statusArrays[id].length === 0)
+            statusArrays[id].push({
+                id: 0,
+                topic: '',
+                classColor: '',
+                title: 'Задач нет',
+                date: '',
+                status: '',
+            })
+    })
+    return statusArrays
+}
 </script>
 
 <template>
@@ -15,7 +32,7 @@ const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
             <p>Без статуса</p>
         </div>
 
-        <div class="cards" v-for="card in cardsNoStatus" :key="card.id">
+        <div class="cards" v-for="card in statusArrays[0]" :key="card.id">
             <TaskCard :classColor="card.classColor" :date="card.date" :topic="card.topic">{{
                 card.title
             }}</TaskCard>
@@ -25,7 +42,7 @@ const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
         <div class="column__title">
             <p>Нужно сделать</p>
         </div>
-        <div class="cards" v-for="card in cardsNeedToDo" :key="card.id">
+        <div class="cards" v-for="card in statusArrays[1]" :key="card.id">
             <TaskCard :classColor="card.classColor" :date="card.date" :topic="card.topic">{{
                 card.title
             }}</TaskCard>
@@ -35,7 +52,7 @@ const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
         <div class="column__title">
             <p>В работе</p>
         </div>
-        <div class="cards" v-for="card in cardsInWork" :key="card.id">
+        <div class="cards" v-for="card in statusArrays[2]" :key="card.id">
             <TaskCard :classColor="card.classColor" :date="card.date" :topic="card.topic">{{
                 card.title
             }}</TaskCard>
@@ -45,7 +62,7 @@ const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
         <div class="column__title">
             <p>Тестирование</p>
         </div>
-        <div class="cards" v-for="card in cardsTesting" :key="card.id">
+        <div class="cards" v-for="card in statusArrays[3]" :key="card.id">
             <TaskCard :classColor="card.classColor" :date="card.date" :topic="card.topic">{{
                 card.title
             }}</TaskCard>
@@ -55,7 +72,7 @@ const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
         <div class="column__title">
             <p>Готово</p>
         </div>
-        <div class="cards" v-for="card in cardsDone" :key="card.id">
+        <div class="cards" v-for="card in statusArrays[4]" :key="card.id">
             <TaskCard :classColor="card.classColor" :date="card.date" :topic="card.topic">{{
                 card.title
             }}</TaskCard>
