@@ -51,6 +51,12 @@ function showElem() {
     padding: 0 30px;
 }
 
+.header {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #ffffff;
+}
+
 .header__block {
     height: 70px;
     display: flex;

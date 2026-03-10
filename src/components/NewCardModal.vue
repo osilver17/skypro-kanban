@@ -342,10 +342,6 @@
     white-space: nowrap;
 }
 
-.pop-browse__content .categories__theme {
-    opacity: 1;
-}
-
 .subttl {
     color: #000;
     font-size: 14px;

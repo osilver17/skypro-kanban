@@ -132,6 +132,14 @@
     background-color: #33399b;
 }
 
+._hover03:hover {
+    background-color: #33399b;
+    color: #ffffff;
+}
+._hover03:hover a {
+    color: #ffffff;
+}
+
 @media only screen and (max-width: 375px) {
     .pop-exit__block {
         padding: 50px 20px;

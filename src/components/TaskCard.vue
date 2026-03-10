@@ -62,6 +62,17 @@ defineProps({
 </template>
 
 <style scoped>
+@keyframes card-animation {
+    0% {
+        height: 0;
+        opacity: 0;
+    }
+    100% {
+        height: auto;
+        opacity: 1;
+    }
+}
+
 .cards__item {
     padding: 5px;
     animation-name: card-animation;

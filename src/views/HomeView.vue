@@ -39,4 +39,17 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+    max-width: 100%;
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+.main {
+    width: 100%;
+    background-color: #eaeef6;
+}
+</style>

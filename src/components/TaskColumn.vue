@@ -82,11 +82,23 @@ const cardsDone = cardsAllStatus.filter((item) => item.status === 'card_Done')
     text-transform: uppercase;
 }
 
+.cards {
+    width: 100%;
+    display: block;
+    position: relative;
+}
+
 @media screen and (max-width: 1200px) {
     .main__column {
         width: 100%;
         margin: 0 auto;
         display: block;
+    }
+
+    .cards {
+        width: 100%;
+        display: flex;
+        overflow-y: auto;
     }
 }
 </style>
