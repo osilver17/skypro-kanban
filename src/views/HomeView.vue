@@ -43,13 +43,12 @@ onMounted(() => {
             </div>
         </div>
 
-        <!-- pop-up end-->
-
         <header class="header">
             <div class="container">
                 <BaseHeader />
             </div>
         </header>
+
         <main class="main">
             <div class="container">
                 <TaskDesk />
