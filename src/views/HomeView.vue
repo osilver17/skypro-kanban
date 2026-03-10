@@ -25,17 +25,9 @@ onMounted(() => {
     <div v-else class="wrapper">
         <!-- pop-up start-->
 
-        <div class="pop-exit" id="popExit">
-            <div class="pop-exit__container">
-                <ExitModal />
-            </div>
-        </div>
+        <ExitModal />
 
-        <div class="pop-new-card" id="popNewCard">
-            <div class="pop-new-card__container">
-                <NewCardModal />
-            </div>
-        </div>
+        <NewCardModal />
 
         <div class="pop-browse" id="popBrowse">
             <div class="pop-browse__container">
