@@ -4,9 +4,9 @@ import TaskCard from './TaskCard.vue'
 const cardsStatus = ['card_NoStatus', 'card_NeedToDo', 'card_InWork', 'card_InTest', 'card_Done']
 
 // Для отображения задач нужно раскомментировать строки 7, 8 и закомментировать 9-ю
-// import { cardsAllStatus } from '@/mocks/tasks'
-// const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
-const statusArrays = tasksDistributionByColumns(cardsStatus)
+import { cardsAllStatus } from '@/mocks/tasks'
+const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
+// const statusArrays = tasksDistributionByColumns(cardsStatus)
 
 function tasksDistributionByColumns(statusArr, taskArr = []) {
     const statusArrays = []
@@ -31,7 +31,6 @@ function tasksDistributionByColumns(statusArr, taskArr = []) {
         <div class="column__title">
             <p>Без статуса</p>
         </div>
-
         <div class="cards" v-for="card in statusArrays[0]" :key="card.id">
             <TaskCard :classColor="card.classColor" :date="card.date" :topic="card.topic">{{
                 card.title
