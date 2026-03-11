@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import SignInView from '@/views/SignInView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 
 const router = createRouter({
 
@@ -10,8 +12,19 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: HomeView
-        }
+            component: HomeView,
+            meta: {
+                requiresAuth: true,
+            }
+        },
+        {
+            path: '/sign-in', // Маршрут для страницы входа
+            component: SignInView // Отдельный компонент для авторизации
+        },
+        {
+            path: '/sign-up', // Маршрут для страницы регистрации
+            component: SignUpView // Экран, позволяющий создать аккаунт
+        },
     ],
 })
 

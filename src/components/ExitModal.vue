@@ -15,7 +15,7 @@
                             <a href="modal/signin.html">Да, выйти</a>
                         </button>
                         <button class="pop-exit__exit-no _hover03" id="exitNo">
-                            <a href="main.html">Нет, остаться</a>
+                            <RouterLink to="/">Нет, остаться</RouterLink>
                         </button>
                     </div>
                 </form>
