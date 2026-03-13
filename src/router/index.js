@@ -13,6 +13,12 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: HomeView,
+            children: [
+                {
+                    path: '/exit', // Маршрут для окна выхода
+                    component: () => import('@/views/ExitModal.vue')
+                },
+            ],
             meta: {
                 requiresAuth: true,
             }
@@ -25,6 +31,11 @@ const router = createRouter({
             path: '/sign-up', // Маршрут для страницы регистрации
             component: SignUpView // Экран, позволяющий создать аккаунт
         },
+        {
+            path: '/:pathMatch(.*)*',
+            component: () => import('@/views/NotFoundView.vue')
+        }
+
     ],
 })
 

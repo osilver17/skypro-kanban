@@ -1,9 +1,7 @@
-<script setup>
-// import HomeView from '@/views/HomeView.vue'
-</script>
+<script setup></script>
 
 <template>
-    <div class="pop-exit" id="popExit">
+    <div class="pop-exit">
         <div class="pop-exit__container">
             <div class="pop-exit__block">
                 <div class="pop-exit__ttl">
@@ -12,7 +10,7 @@
                 <form class="pop-exit__form" id="formExit" action="#">
                     <div class="pop-exit__form-group">
                         <button class="pop-exit__exit-yes _hover01" id="exitYes">
-                            <a href="modal/signin.html">Да, выйти</a>
+                            <RouterLink to="/sign-in">Да, выйти</RouterLink>
                         </button>
                         <button class="pop-exit__exit-no _hover03" id="exitNo">
                             <RouterLink to="/">Нет, остаться</RouterLink>
@@ -26,7 +24,6 @@
 
 <style scoped>
 .pop-exit {
-    display: none;
     width: 100%;
     height: 100%;
     min-width: 320px;
@@ -35,10 +32,6 @@
     top: 0;
     left: 0;
     z-index: 5;
-}
-
-.pop-exit:target {
-    display: block;
 }
 
 .pop-exit__container {
