@@ -1,9 +1,9 @@
 <script setup>
 import TaskDesk from '@/components/TaskDesk.vue'
 import BaseHeader from '@/components/BaseHeader.vue'
-import NewCardModal from '@/components/NewCardModal.vue'
-import ExitModal from '@/components/ExitModal.vue'
-import TaskModal from '@/components/TaskModal.vue'
+import TaskCreating from '@/views/TaskCreating.vue'
+import ExitModal from '@/views/ExitModal.vue'
+import TaskBrowse from '@/views/TaskBrowse.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { ref, onMounted } from 'vue'
 
@@ -16,7 +16,7 @@ onMounted(() => {
     setTimeout(() => {
         loading.value = false
         console.log('setTimeout отработал. loading.value =', loading.value)
-    }, 3000)
+    }, 100)
 })
 </script>
 
@@ -27,9 +27,9 @@ onMounted(() => {
 
         <ExitModal />
 
-        <NewCardModal />
+        <TaskCreating />
 
-        <TaskModal />
+        <TaskBrowse />
 
         <BaseHeader />
 
