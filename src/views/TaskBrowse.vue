@@ -1,16 +1,42 @@
 <script setup>
-// import HomeView from '@/views/HomeView.vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+import { computed } from 'vue'
+import { cardsAllStatus } from '@/mocks/tasks'
+
+const task = computed(() => {
+    console.log('cardsAllStatus =', cardsAllStatus)
+
+    return (
+        cardsAllStatus.find((task) => task.id === route.params.id) || {
+            id: 0,
+            topic: '',
+            classColor: '',
+            title: 'Что-то сломалось',
+            date: '',
+            status: '',
+        }
+    )
+})
 </script>
 
 <template>
-    <div class="pop-browse" id="popBrowse">
+    <div class="pop-browse">
         <div class="pop-browse__container">
             <div class="pop-browse__block">
                 <div class="pop-browse__content">
                     <div class="pop-browse__top-block">
-                        <h3 class="pop-browse__ttl">Название задачи</h3>
-                        <div class="categories__theme theme-top _orange _active-category">
-                            <p class="_orange">Web Design</p>
+                        <h3 class="pop-browse__ttl">{{ task.title }}</h3>
+                        <div
+                            :class="[
+                                'categories__theme',
+                                'theme-top',
+                                '_active-category',
+                                task.classColor,
+                            ]"
+                        >
+                            <p :class="task.classColor">{{ task.topic }}</p>
                         </div>
                     </div>
                     <div class="pop-browse__status status">
@@ -155,7 +181,7 @@
                             </button>
                         </div>
                         <button class="btn-browse__close _btn-bg _hover01">
-                            <a href="#">Закрыть</a>
+                            <RouterLink to="/">Закрыть</RouterLink>
                         </button>
                     </div>
                     <div class="pop-browse__btn-edit _hide">
@@ -181,12 +207,7 @@
 </template>
 
 <style scoped>
-.pop-browse:target {
-    display: block;
-}
-
 .pop-browse {
-    display: none;
     width: 100%;
     height: 100%;
     min-width: 375px;

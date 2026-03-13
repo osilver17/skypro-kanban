@@ -1,8 +1,7 @@
 <script setup>
-import TaskDesk from '@/components/TaskDesk.vue'
+import TaskDesk from '@/views/TaskDesk.vue'
 import BaseHeader from '@/views/BaseHeader.vue'
-import TaskCreating from '@/views/TaskCreating.vue'
-import TaskBrowse from '@/views/TaskBrowse.vue'
+// import TaskCreating from '@/views/TaskCreating.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { ref, onMounted } from 'vue'
 
@@ -24,9 +23,7 @@ onMounted(() => {
     <div v-else class="wrapper">
         <!-- pop-up start-->
 
-        <TaskCreating />
-
-        <TaskBrowse />
+        <!-- <TaskCreating /> -->
 
         <!-- pop-up end-->
 

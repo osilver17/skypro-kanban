@@ -1,5 +1,6 @@
 <script setup>
 defineProps({
+    id: String,
     classColor: String,
     date: String,
     topic: String,
@@ -13,13 +14,13 @@ defineProps({
                 <div :class="['card__theme', classColor]">
                     <p :class="classColor">{{ topic }}</p>
                 </div>
-                <a href="#popBrowse" target="_self">
+                <RouterLink :to="{ path: `/browse/${id}` }">
                     <div class="card__btn">
                         <div></div>
                         <div></div>
                         <div></div>
                     </div>
-                </a>
+                </RouterLink>
             </div>
             <div class="card__content">
                 <a href="" target="_blank">

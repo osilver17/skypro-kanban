@@ -7,7 +7,6 @@ const router = createRouter({
 
     history: createWebHistory(import.meta.env.BASE_URL),
 
-
     routes: [
         {
             path: '/',
@@ -17,6 +16,10 @@ const router = createRouter({
                 {
                     path: '/exit', // Маршрут для окна выхода
                     component: () => import('@/views/ExitModal.vue')
+                },
+                {
+                    path: '/browse/:id', // Маршрут для окна задачи
+                    component: () => import('@/views/TaskBrowse.vue')
                 },
             ],
             meta: {
