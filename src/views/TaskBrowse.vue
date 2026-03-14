@@ -6,10 +6,8 @@ import { computed } from 'vue'
 import { cardsAllStatus } from '@/mocks/tasks'
 
 const task = computed(() => {
-    console.log('cardsAllStatus =', cardsAllStatus)
-
     return (
-        cardsAllStatus.find((task) => task.id === route.params.id) || {
+        cardsAllStatus.find((task) => task.id === route.params.cardId) || {
             id: 0,
             topic: '',
             classColor: '',
@@ -42,20 +40,8 @@ const task = computed(() => {
                     <div class="pop-browse__status status">
                         <p class="status__p subttl">Статус</p>
                         <div class="status__themes">
-                            <div class="status__theme _hide">
-                                <p>Без статуса</p>
-                            </div>
                             <div class="status__theme _gray">
-                                <p class="_gray">Нужно сделать</p>
-                            </div>
-                            <div class="status__theme _hide">
-                                <p>В работе</p>
-                            </div>
-                            <div class="status__theme _hide">
-                                <p>Тестирование</p>
-                            </div>
-                            <div class="status__theme _hide">
-                                <p>Готово</p>
+                                <p class="_gray">{{ task.status }}</p>
                             </div>
                         </div>
                     </div>
@@ -174,7 +160,9 @@ const task = computed(() => {
                     <div class="pop-browse__btn-browse">
                         <div class="btn-group">
                             <button class="btn-browse__edit _btn-bor _hover03">
-                                <a href="#">Редактировать задачу</a>
+                                <RouterLink :to="{ name: 'edit-card', params: { cardId } }"
+                                    >Редактировать задачу</RouterLink
+                                >
                             </button>
                             <button class="btn-browse__delete _btn-bor _hover03">
                                 <a href="#">Удалить задачу</a>

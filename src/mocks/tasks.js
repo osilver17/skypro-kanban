@@ -6,7 +6,7 @@ export const cardsAllStatus = [
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_NoStatus',
+        status: 'Без статуса',
     },
 
     {
@@ -15,7 +15,7 @@ export const cardsAllStatus = [
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_NoStatus',
+        status: 'Без статуса',
     },
 
     {
@@ -24,7 +24,7 @@ export const cardsAllStatus = [
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_NoStatus',
+        status: 'Без статуса',
     },
 
     {
@@ -33,7 +33,7 @@ export const cardsAllStatus = [
         classColor: "_purple",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_NoStatus',
+        status: 'Без статуса',
     },
 
     {
@@ -42,7 +42,7 @@ export const cardsAllStatus = [
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_NoStatus',
+        status: 'Без статуса',
     },
 
     {
@@ -51,7 +51,7 @@ export const cardsAllStatus = [
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_NeedToDo',
+        status: 'Нужно сделать',
     },
 
     {
@@ -60,7 +60,7 @@ export const cardsAllStatus = [
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_InWork',
+        status: 'В работе',
     },
 
     {
@@ -69,7 +69,7 @@ export const cardsAllStatus = [
         classColor: "_purple",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_InWork',
+        status: 'В работе',
     },
 
     {
@@ -78,7 +78,7 @@ export const cardsAllStatus = [
         classColor: "_orange",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_InWork',
+        status: 'В работе',
     },
 
     {
@@ -87,7 +87,7 @@ export const cardsAllStatus = [
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_InTest',
+        status: 'Тестирование',
     },
 
     {
@@ -96,6 +96,6 @@ export const cardsAllStatus = [
         classColor: "_green",
         title: 'Название задачи',
         date: '30.10.23',
-        status: 'card_Done',
+        status: 'Готово',
     },
 ]

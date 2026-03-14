@@ -2,7 +2,7 @@
 import TaskCard from './TaskCard.vue'
 import { cardsAllStatus } from '@/mocks/tasks'
 
-const cardsStatus = ['card_NoStatus', 'card_NeedToDo', 'card_InWork', 'card_InTest', 'card_Done']
+const cardsStatus = ['Без статуса', 'Нужно сделать', 'В работе', 'Тестирование', 'Готово']
 
 function tasksDistributionByColumns(statusArr, taskArr = []) {
     const statusArrays = []
@@ -29,12 +29,14 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         <div class="column__title">
             <p>Без статуса</p>
         </div>
-        <div class="cards" v-for="card in statusArrays[0]" :key="card.id">
+        <div class="cards">
             <TaskCard
-                :id="card.id"
+                :cardId="card.id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
+                v-for="card in statusArrays[0]"
+                :key="card.id"
                 >{{ card.title }}</TaskCard
             >
         </div>
@@ -43,12 +45,14 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         <div class="column__title">
             <p>Нужно сделать</p>
         </div>
-        <div class="cards" v-for="card in statusArrays[1]" :key="card.id">
+        <div class="cards">
             <TaskCard
-                :id="card.id"
+                :cardId="card.id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
+                v-for="card in statusArrays[1]"
+                :key="card.id"
                 >{{ card.title }}</TaskCard
             >
         </div>
@@ -57,12 +61,14 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         <div class="column__title">
             <p>В работе</p>
         </div>
-        <div class="cards" v-for="card in statusArrays[2]" :key="card.id">
+        <div class="cards">
             <TaskCard
-                :id="card.id"
+                :cardId="card.id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
+                v-for="card in statusArrays[2]"
+                :key="card.id"
                 >{{ card.title }}</TaskCard
             >
         </div>
@@ -71,12 +77,14 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         <div class="column__title">
             <p>Тестирование</p>
         </div>
-        <div class="cards" v-for="card in statusArrays[3]" :key="card.id">
+        <div class="cards">
             <TaskCard
-                :id="card.id"
+                :cardId="card.id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
+                v-for="card in statusArrays[3]"
+                :key="card.id"
                 >{{ card.title }}</TaskCard
             >
         </div>
@@ -85,12 +93,14 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         <div class="column__title">
             <p>Готово</p>
         </div>
-        <div class="cards" v-for="card in statusArrays[4]" :key="card.id">
+        <div class="cards">
             <TaskCard
-                :id="card.id"
+                :cardId="card.id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
+                v-for="card in statusArrays[4]"
+                :key="card.id"
                 >{{ card.title }}</TaskCard
             >
         </div>

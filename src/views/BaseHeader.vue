@@ -24,7 +24,7 @@ function showUserSet() {
                 </div>
                 <nav class="header__nav">
                     <button class="header__btn-main-new _hover01" id="btnMainNew">
-                        <a href="#popNewCard">Создать новую задачу</a>
+                        <RouterLink to="/new-task">Создать новую задачу</RouterLink>
                     </button>
                     <a href="#" class="header__user _hover02" @click="showUserSet">Ivan Ivanov</a>
                     <UserSet v-show="!isVisible" />

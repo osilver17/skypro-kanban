@@ -1,5 +1,22 @@
 <script setup>
-// import HomeView from '@/views/HomeView.vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+import { computed } from 'vue'
+import { cardsAllStatus } from '@/mocks/tasks'
+
+const task = computed(() => {
+    return (
+        cardsAllStatus.find((task) => task.id === route.params.cardId) || {
+            id: 0,
+            topic: '',
+            classColor: '',
+            title: 'Что-то сломалось',
+            date: '',
+            status: '',
+        }
+    )
+})
 </script>
 
 <template>
@@ -8,28 +25,23 @@
             <div class="pop-browse__block">
                 <div class="pop-browse__content">
                     <div class="pop-browse__top-block">
-                        <h3 class="pop-browse__ttl">Название задачи</h3>
-                        <div class="categories__theme theme-top _orange _active-category">
-                            <p class="_orange">Web Design</p>
+                        <h3 class="pop-browse__ttl">{{ task.title }}</h3>
+                        <div
+                            :class="[
+                                'categories__theme',
+                                'theme-top',
+                                '_active-category',
+                                task.classColor,
+                            ]"
+                        >
+                            <p :class="task.classColor">{{ task.topic }}</p>
                         </div>
                     </div>
                     <div class="pop-browse__status status">
                         <p class="status__p subttl">Статус</p>
                         <div class="status__themes">
-                            <div class="status__theme _hide">
-                                <p>Без статуса</p>
-                            </div>
                             <div class="status__theme _gray">
-                                <p class="_gray">Нужно сделать</p>
-                            </div>
-                            <div class="status__theme _hide">
-                                <p>В работе</p>
-                            </div>
-                            <div class="status__theme _hide">
-                                <p>Тестирование</p>
-                            </div>
-                            <div class="status__theme _hide">
-                                <p>Готово</p>
+                                <p class="_gray">{{ task.status }}</p>
                             </div>
                         </div>
                     </div>
@@ -155,7 +167,7 @@
                             </button>
                         </div>
                         <button class="btn-browse__close _btn-bg _hover01">
-                            <a href="#">Закрыть</a>
+                            <RouterLink to="/">Закрыть</RouterLink>
                         </button>
                     </div>
                     <div class="pop-browse__btn-edit">
@@ -164,14 +176,14 @@
                                 <a href="#">Сохранить</a>
                             </button>
                             <button class="btn-edit__edit _btn-bor _hover03">
-                                <a href="#">Отменить</a>
+                                <RouterLink to="/">Отменить</RouterLink>
                             </button>
                             <button class="btn-edit__delete _btn-bor _hover03" id="btnDelete">
                                 <a href="#">Удалить задачу</a>
                             </button>
                         </div>
                         <button class="btn-edit__close _btn-bg _hover01">
-                            <a href="#">Закрыть</a>
+                            <RouterLink to="/">Закрыть</RouterLink>
                         </button>
                     </div>
                 </div>
@@ -186,7 +198,6 @@
 }
 
 .pop-browse {
-    display: none;
     width: 100%;
     height: 100%;
     min-width: 375px;

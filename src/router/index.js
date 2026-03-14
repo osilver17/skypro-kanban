@@ -18,8 +18,18 @@ const router = createRouter({
                     component: () => import('@/views/ExitModal.vue')
                 },
                 {
-                    path: '/browse/:id', // Маршрут для окна задачи
+                    path: '/browse/:cardId', // Маршрут для окна просмотра задачи
+                    name: 'browse-card',
                     component: () => import('@/views/TaskBrowse.vue')
+                },
+                {
+                    path: '/new-task', // Маршрут для окна новой задачи
+                    component: () => import('@/views/TaskCreating.vue')
+                },
+                {
+                    path: '/task-edit/:cardId', // Маршрут для окна редактирования задачи
+                    name: 'edit-card',
+                    component: () => import('@/views/TaskEditing.vue')
                 },
             ],
             meta: {
@@ -41,5 +51,17 @@ const router = createRouter({
 
     ],
 })
+
+router.beforeEach((to, from, next) => {
+    // Берем токен
+    const token = localStorage.getItem('userInfo');
+
+    // Проверяем, действительно ли на маршруте нужна авторизация и есть ли токен
+    if (to.meta.requiresAuth && !token) {
+        next('/sign-in'); // Если нет, уводим на страницу входа
+    } else {
+        next(); // Иначе пропускаем пользователя
+    }
+});
 
 export default router

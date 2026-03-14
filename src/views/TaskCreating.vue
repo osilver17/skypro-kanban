@@ -8,7 +8,7 @@
             <div class="pop-new-card__block">
                 <div class="pop-new-card__content">
                     <h3 class="pop-new-card__ttl">Создание задачи</h3>
-                    <a href="#" class="pop-new-card__close">&#10006;</a>
+                    <RouterLink to="/" class="pop-new-card__close">&#10006;</RouterLink>
                     <div class="pop-new-card__wrap">
                         <form class="pop-new-card__form form-new" id="formNewCard" action="#">
                             <div class="form-new__block">
@@ -146,7 +146,6 @@
 
 <style scoped>
 .pop-new-card {
-    display: none;
     width: 100%;
     min-width: 375px;
     height: 100%;

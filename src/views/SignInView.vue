@@ -22,7 +22,7 @@
                             placeholder="Пароль"
                         />
                         <button class="modal__btn-enter _hover01" id="btnEnter">
-                            <a href="../main.html">Войти</a>
+                            <a href="#" :onClick="handleSignIn">Войти</a>
                         </button>
                         <div class="modal__form-group">
                             <p>Нужно зарегистрироваться?</p>
@@ -35,8 +35,17 @@
     </div>
 </template>
 
-<script>
-export default {}
+<script setup>
+// Импортируем необходимые компоненты и хуки
+import { useRouter } from 'vue-router'
+
+const router = useRouter() // Инициализация роутера
+
+async function handleSignIn(e) {
+    e.preventDefault() // Предотвращаем перезагрузку страницы
+    localStorage.setItem('userInfo', 'true') // Сохраняем флаг авторизации
+    router.push('/') // Перенаправляем на главную страницу
+}
 </script>
 
 <style scoped>
