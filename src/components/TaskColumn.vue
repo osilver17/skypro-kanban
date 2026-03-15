@@ -25,9 +25,9 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
 </script>
 
 <template>
-    <div class="main__column column">
+    <div class="main__column" v-for="(column, index) in cardsStatus" :key="index">
         <div class="column__title">
-            <p>Без статуса</p>
+            <p>{{ column }}</p>
         </div>
         <div class="cards">
             <TaskCard
@@ -35,71 +35,7 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
-                v-for="card in statusArrays[0]"
-                :key="card.id"
-                >{{ card.title }}</TaskCard
-            >
-        </div>
-    </div>
-    <div class="main__column">
-        <div class="column__title">
-            <p>Нужно сделать</p>
-        </div>
-        <div class="cards">
-            <TaskCard
-                :cardId="card.id"
-                :classColor="card.classColor"
-                :date="card.date"
-                :topic="card.topic"
-                v-for="card in statusArrays[1]"
-                :key="card.id"
-                >{{ card.title }}</TaskCard
-            >
-        </div>
-    </div>
-    <div class="main__column">
-        <div class="column__title">
-            <p>В работе</p>
-        </div>
-        <div class="cards">
-            <TaskCard
-                :cardId="card.id"
-                :classColor="card.classColor"
-                :date="card.date"
-                :topic="card.topic"
-                v-for="card in statusArrays[2]"
-                :key="card.id"
-                >{{ card.title }}</TaskCard
-            >
-        </div>
-    </div>
-    <div class="main__column">
-        <div class="column__title">
-            <p>Тестирование</p>
-        </div>
-        <div class="cards">
-            <TaskCard
-                :cardId="card.id"
-                :classColor="card.classColor"
-                :date="card.date"
-                :topic="card.topic"
-                v-for="card in statusArrays[3]"
-                :key="card.id"
-                >{{ card.title }}</TaskCard
-            >
-        </div>
-    </div>
-    <div class="main__column">
-        <div class="column__title">
-            <p>Готово</p>
-        </div>
-        <div class="cards">
-            <TaskCard
-                :cardId="card.id"
-                :classColor="card.classColor"
-                :date="card.date"
-                :topic="card.topic"
-                v-for="card in statusArrays[4]"
+                v-for="card in statusArrays[index]"
                 :key="card.id"
                 >{{ card.title }}</TaskCard
             >

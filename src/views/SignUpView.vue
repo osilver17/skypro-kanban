@@ -29,7 +29,7 @@
                             placeholder="Пароль"
                         />
                         <button class="modal__btn-signup-ent _hover01" id="SignUpEnter">
-                            <a href="../main.html">Зарегистрироваться</a>
+                            <RouterLink to="/sign-in">Зарегистрироваться</RouterLink>
                         </button>
                         <div class="modal__form-group">
                             <p>

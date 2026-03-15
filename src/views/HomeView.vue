@@ -14,7 +14,7 @@ onMounted(() => {
     setTimeout(() => {
         loading.value = false
         console.log('setTimeout отработал. loading.value =', loading.value)
-    }, 100)
+    }, 1000)
 })
 </script>
 
@@ -22,8 +22,6 @@ onMounted(() => {
     <PreLoader v-if="loading" />
     <div v-else class="wrapper">
         <!-- pop-up start-->
-
-        <!-- <TaskCreating /> -->
 
         <!-- pop-up end-->
 
