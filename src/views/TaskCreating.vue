@@ -1,9 +1,83 @@
 <script setup>
-// import HomeView from '@/views/HomeView.vue'
+import { ref } from 'vue'
+import { createTask } from '@/services/api.js'
+import PreLoader from '@/components/PreLoader.vue'
+import { useRouter } from 'vue-router'
+import { cardsAllStatus } from '@/mocks/tasks'
+
+const router = useRouter()
+
+const loading = ref(false)
+// ref(false) - флаг, показывающий, что идёт загрузка
+
+const classes = [
+    {
+        id: 1,
+        classType: '_orange',
+        text: 'Web Design',
+    },
+    {
+        id: 2,
+        classType: '_green',
+        text: 'Research',
+    },
+    {
+        id: 3,
+        classType: '_purple',
+        text: 'Copywriting',
+    },
+]
+
+const taskData = ref({
+    title: '',
+    description: '',
+    topic: '',
+})
+const error = ref('')
+// ref('') - строка для текста ошибки
+
+const categoryItemText = ref('')
+
+async function createNewTask(event) {
+    event.preventDefault()
+
+    try {
+        loading.value = true
+        const stringUserInfo = localStorage.getItem('userInfo')
+        const userInfo = JSON.parse(stringUserInfo)
+        const token = userInfo.token
+        console.log('taskData.value.topic =', taskData.value.topic)
+
+        const data = await createTask(
+            {
+                token: token,
+            },
+
+            {
+                title: taskData.value.title,
+                description: taskData.value.description,
+                topic: taskData.value.topic,
+            },
+        )
+        if (data) {
+            console.log('data =', data.tasks)
+            cardsAllStatus.length = 0
+            cardsAllStatus.push(...data.tasks)
+
+            router.push('/')
+        }
+    } catch (err) {
+        error.value = err.message
+        alert(error.value)
+    } finally {
+        loading.value = false
+    }
+}
 </script>
 
 <template>
-    <div class="pop-new-card" id="popNewCard">
+    <PreLoader v-if="loading" />
+    <div v-else class="pop-new-card" id="popNewCard">
         <div class="pop-new-card__container">
             <div class="pop-new-card__block">
                 <div class="pop-new-card__content">
@@ -19,6 +93,7 @@
                                     name="name"
                                     id="formTitle"
                                     placeholder="Введите название задачи..."
+                                    v-model="taskData.title"
                                     autofocus
                                 />
                             </div>
@@ -29,6 +104,7 @@
                                     name="text"
                                     id="textArea"
                                     placeholder="Введите описание задачи..."
+                                    v-model="taskData.description"
                                 ></textarea>
                             </div>
                         </form>
@@ -126,18 +202,36 @@
                     <div class="pop-new-card__categories categories">
                         <p class="categories__p subttl">Категория</p>
                         <div class="categories__themes">
-                            <div class="categories__theme _orange _active-category">
-                                <p class="_orange">Web Design</p>
+                            <div
+                                v-for="(classItem, index) in classes"
+                                :key="index"
+                                class="categories__theme"
+                                :class="[
+                                    classItem.classType,
+                                    { '_active-category': classItem.text == categoryItemText },
+                                ]"
+                                @click="
+                                    ((categoryItemText = classItem.text),
+                                    (taskData.topic = classItem.text))
+                                "
+                            >
+                                <p :class="classItem.classType">{{ classItem.text }}</p>
                             </div>
-                            <div class="categories__theme _green">
+                            <!-- <div
+                                class="categories__theme _green"
+                                :class="{ '_active-category': isActive, disabled: isDisabled }"
+                                @click="handleClick"
+                            >
                                 <p class="_green">Research</p>
                             </div>
-                            <div class="categories__theme _purple">
+                            <div class="categories__theme _purple" @click="handleClick">
                                 <p class="_purple">Copywriting</p>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
-                    <button class="form-new__create _hover01" id="btnCreate">Создать задачу</button>
+                    <button class="form-new__create _hover01" id="btnCreate" @click="createNewTask">
+                        Создать задачу
+                    </button>
                 </div>
             </div>
         </div>
@@ -332,6 +426,10 @@
     border-radius: 24px;
     margin-right: 7px;
     opacity: 0.4;
+}
+
+.categories__theme:hover {
+    cursor: pointer;
 }
 
 .categories__theme p {

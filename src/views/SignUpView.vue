@@ -1,3 +1,75 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { signUp } from '@/services/authAPI'
+
+const router = useRouter()
+
+const formData = ref({
+    name: '',
+    login: '',
+    password: '',
+})
+
+const errors = ref({
+    name: false,
+    login: false,
+    password: false,
+})
+const error = ref('')
+
+function validateForm() {
+    let isValid = true
+    error.value = ''
+    // Сбросим все ошибки
+    errors.value.name = false
+    errors.value.login = false
+    errors.value.password = false
+    // Проверка имени
+    if (!formData.value.name.trim()) {
+        errors.value.name = true
+        isValid = false
+    }
+    // Проверка логина (эл. почты)
+    if (!formData.value.login.trim()) {
+        errors.value.login = true
+        isValid = false
+    }
+    // Проверка пароля
+    if (!formData.value.password.trim()) {
+        errors.value.password = true
+        isValid = false
+    }
+    // Если есть ошибки, установим общее сообщение
+    if (!isValid) {
+        error.value = 'Пожалуйста, заполните все обязательные поля'
+    }
+    return isValid
+}
+
+async function handleSignUp(event) {
+    event.preventDefault()
+    // Валидация формы перед отправкой
+    if (!validateForm()) {
+        console.log('error сразу после проверки валидации =', error)
+        console.log('error.value сразу после проверки валидации =', error.value)
+        return
+    }
+    try {
+        const data = await signUp(formData.value)
+        if (data) {
+            console.log('data =', data)
+
+            localStorage.setItem('userInfo', JSON.stringify(data))
+            router.push('/')
+        }
+    } catch (err) {
+        error.value = err.message
+        console.log('error.value в catch =', error.value)
+    }
+}
+</script>
+
 <template>
     <div class="wrapper">
         <div class="container-signup">
@@ -13,6 +85,7 @@
                             name="first-name"
                             id="first-name"
                             placeholder="Имя"
+                            v-model="formData.name"
                         />
                         <input
                             class="modal__input login"
@@ -20,6 +93,7 @@
                             name="login"
                             id="loginReg"
                             placeholder="Эл. почта"
+                            v-model="formData.login"
                         />
                         <input
                             class="modal__input password-first"
@@ -27,9 +101,13 @@
                             name="password"
                             id="passwordFirst"
                             placeholder="Пароль"
+                            v-model="formData.password"
                         />
+                        <div v-if="error" class="modal__form-error">
+                            <p>{{ error }}</p>
+                        </div>
                         <button class="modal__btn-signup-ent _hover01" id="SignUpEnter">
-                            <RouterLink to="/sign-in">Зарегистрироваться</RouterLink>
+                            <a href="#" @click="handleSignUp">Зарегистрироваться</a>
                         </button>
                         <div class="modal__form-group">
                             <p>
@@ -43,10 +121,6 @@
         </div>
     </div>
 </template>
-
-<script>
-export default {}
-</script>
 
 <style scoped>
 .wrapper {
@@ -170,6 +244,16 @@ export default {}
 }
 .modal__form-group a {
     text-decoration: underline;
+}
+
+.modal__form-error p {
+    text-align: center;
+    margin-top: 12px;
+    color: rgb(248, 4, 4);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.14px;
 }
 
 @media screen and (max-width: 375px) {

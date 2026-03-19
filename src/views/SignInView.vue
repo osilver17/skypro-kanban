@@ -1,3 +1,67 @@
+<script setup>
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { signIn } from '@/services/authAPI'
+
+const router = useRouter() // Инициализация роутера
+
+const formData = ref({
+    login: '',
+    password: '',
+})
+const errors = ref({
+    login: false,
+    password: false,
+})
+const error = ref('')
+
+function validateForm() {
+    let isValid = true
+    error.value = ''
+    // Сбросим все ошибки
+    errors.value.login = false
+    errors.value.password = false
+
+    // Проверка логина (эл. почты)
+    if (!formData.value.login.trim()) {
+        errors.value.login = true
+        isValid = false
+    }
+    // Проверка пароля
+    if (!formData.value.password.trim()) {
+        errors.value.password = true
+        isValid = false
+    }
+    // Если есть ошибки, установим общее сообщение
+    if (!isValid) {
+        error.value = 'Пожалуйста, заполните все обязательные поля'
+    }
+    return isValid
+}
+
+async function handleSignIn(e) {
+    e.preventDefault() // Предотвращаем перезагрузку страницы
+    // Валидация формы перед отправкой
+    if (!validateForm()) {
+        console.log('handleSignIn: error сразу после проверки валидации =', error)
+        console.log('handleSignIn: error.value сразу после проверки валидации =', error.value)
+        return
+    }
+    try {
+        const data = await signIn({
+            login: formData.value.login,
+            password: formData.value.password,
+        })
+        if (data) {
+            localStorage.setItem('userInfo', JSON.stringify(data))
+            router.push('/')
+        }
+    } catch (err) {
+        error.value = err.message
+    }
+}
+</script>
+
 <template>
     <div class="wrapper">
         <div class="container-signin">
@@ -13,6 +77,7 @@
                             name="login"
                             id="formlogin"
                             placeholder="Эл. почта"
+                            v-model="formData.login"
                         />
                         <input
                             class="modal__input"
@@ -20,7 +85,11 @@
                             name="password"
                             id="formpassword"
                             placeholder="Пароль"
+                            v-model="formData.password"
                         />
+                        <div v-if="error" class="modal__form-error">
+                            <p>{{ error }}</p>
+                        </div>
                         <button class="modal__btn-enter _hover01" id="btnEnter">
                             <a href="#" :onClick="handleSignIn">Войти</a>
                         </button>
@@ -34,19 +103,6 @@
         </div>
     </div>
 </template>
-
-<script setup>
-// Импортируем необходимые компоненты и хуки
-import { useRouter } from 'vue-router'
-
-const router = useRouter() // Инициализация роутера
-
-async function handleSignIn(e) {
-    e.preventDefault() // Предотвращаем перезагрузку страницы
-    localStorage.setItem('userInfo', 'true') // Сохраняем флаг авторизации
-    router.push('/') // Перенаправляем на главную страницу
-}
-</script>
 
 <style scoped>
 .wrapper {
@@ -170,6 +226,16 @@ async function handleSignIn(e) {
 }
 .modal__form-group a {
     text-decoration: underline;
+}
+
+.modal__form-error p {
+    text-align: center;
+    margin-top: 19px;
+    color: rgb(248, 4, 4);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.14px;
 }
 
 @media screen and (max-width: 375px) {

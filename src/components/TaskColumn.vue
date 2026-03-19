@@ -10,7 +10,7 @@ function tasksDistributionByColumns(statusArr, taskArr = []) {
         statusArrays[id] = taskArr.filter((item) => item.status === element)
         if (statusArrays[id].length === 0)
             statusArrays[id].push({
-                id: 0,
+                _id: '0',
                 topic: '',
                 classColor: '',
                 title: 'Задач нет',
@@ -31,12 +31,12 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         </div>
         <div class="cards">
             <TaskCard
-                :cardId="card.id"
+                :cardId="card._id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
                 v-for="card in statusArrays[index]"
-                :key="card.id"
+                :key="card._id"
                 >{{ card.title }}</TaskCard
             >
         </div>

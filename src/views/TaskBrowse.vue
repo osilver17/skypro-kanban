@@ -7,8 +7,8 @@ import { cardsAllStatus } from '@/mocks/tasks'
 
 const task = computed(() => {
     return (
-        cardsAllStatus.find((task) => task.id === route.params.cardId) || {
-            id: 0,
+        cardsAllStatus.find((task) => task._id === route.params.cardId) || {
+            _id: '0',
             topic: '',
             classColor: '',
             title: 'Что-то сломалось',
@@ -55,6 +55,7 @@ const task = computed(() => {
                                     id="textArea01"
                                     readonly
                                     placeholder="Введите описание задачи..."
+                                    v-model="task.description"
                                 ></textarea>
                             </div>
                         </form>
