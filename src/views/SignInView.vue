@@ -74,6 +74,7 @@ async function handleSignIn(e) {
                         <input
                             class="modal__input"
                             type="text"
+                            autocomplete="email"
                             name="login"
                             id="formlogin"
                             placeholder="Эл. почта"
@@ -83,6 +84,7 @@ async function handleSignIn(e) {
                             class="modal__input"
                             type="password"
                             name="password"
+                            autocomplete="current-password"
                             id="formpassword"
                             placeholder="Пароль"
                             v-model="formData.password"
