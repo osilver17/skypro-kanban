@@ -11,7 +11,7 @@ const task = computed(() => {
             _id: '0',
             topic: '',
             classColor: '',
-            title: 'Что-то сломалось',
+            title: 'Задачи не существует',
             date: '',
             status: '',
         }

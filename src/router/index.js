@@ -52,15 +52,15 @@ const router = createRouter({
     ],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
     // Берем токен
     const token = localStorage.getItem('userInfo');
 
     // Проверяем, действительно ли на маршруте нужна авторизация и есть ли токен
     if (to.meta.requiresAuth && !token) {
-        next('/sign-in'); // Если нет, уводим на страницу входа
+        return '/sign-in'; // Если нет, уводим на страницу входа
     } else {
-        next(); // Иначе пропускаем пользователя
+        return true; // Иначе пропускаем пользователя
     }
 });
 
