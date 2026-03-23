@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import AppLayout from '@/layout/AppLayout.vue'
 import HomeView from '@/views/HomeView.vue'
 import SignInView from '@/views/SignInView.vue'
 import SignUpView from '@/views/SignUpView.vue'
@@ -10,45 +11,50 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: HomeView,
+            component: AppLayout,
             children: [
                 {
-                    path: '/exit', // Маршрут для окна выхода
-                    component: () => import('@/views/ExitModal.vue')
+                    path: '/',
+                    name: 'home',
+                    component: HomeView,
+                    children: [
+                        {
+                            path: '/exit', // Маршрут для окна выхода
+                            component: () => import('@/views/ExitModal.vue')
+                        },
+                        {
+                            path: '/browse/:cardId', // Маршрут для окна просмотра задачи
+                            name: 'browse-card',
+                            component: () => import('@/views/TaskBrowse.vue')
+                        },
+                        {
+                            path: '/new-task', // Маршрут для окна новой задачи
+                            component: () => import('@/views/TaskCreating.vue')
+                        },
+                        {
+                            path: '/task-edit/:cardId', // Маршрут для окна редактирования задачи
+                            name: 'edit-card',
+                            component: () => import('@/views/TaskEditing.vue')
+                        },
+                    ],
+                    meta: {
+                        requiresAuth: true,
+                    }
                 },
                 {
-                    path: '/browse/:cardId', // Маршрут для окна просмотра задачи
-                    name: 'browse-card',
-                    component: () => import('@/views/TaskBrowse.vue')
+                    path: '/sign-in', // Маршрут для страницы входа
+                    component: SignInView // Отдельный компонент для авторизации
                 },
                 {
-                    path: '/new-task', // Маршрут для окна новой задачи
-                    component: () => import('@/views/TaskCreating.vue')
+                    path: '/sign-up', // Маршрут для страницы регистрации
+                    component: SignUpView // Экран, позволяющий создать аккаунт
                 },
                 {
-                    path: '/task-edit/:cardId', // Маршрут для окна редактирования задачи
-                    name: 'edit-card',
-                    component: () => import('@/views/TaskEditing.vue')
-                },
-            ],
-            meta: {
-                requiresAuth: true,
-            }
+                    path: '/:pathMatch(.*)*',
+                    component: () => import('@/views/NotFoundView.vue')
+                }
+            ]
         },
-        {
-            path: '/sign-in', // Маршрут для страницы входа
-            component: SignInView // Отдельный компонент для авторизации
-        },
-        {
-            path: '/sign-up', // Маршрут для страницы регистрации
-            component: SignUpView // Экран, позволяющий создать аккаунт
-        },
-        {
-            path: '/:pathMatch(.*)*',
-            component: () => import('@/views/NotFoundView.vue')
-        }
-
     ],
 })
 

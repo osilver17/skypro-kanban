@@ -1,7 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { signUp } from '@/services/authAPI'
+
+const { setUser } = inject('auth')
 
 const router = useRouter()
 
@@ -59,8 +61,7 @@ async function handleSignUp(event) {
         const data = await signUp(formData.value)
         if (data) {
             console.log('data =', data)
-
-            localStorage.setItem('userInfo', JSON.stringify(data))
+            setUser(data)
             router.push('/')
         }
     } catch (err) {

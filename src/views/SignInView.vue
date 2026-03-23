@@ -1,7 +1,9 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { signIn } from '@/services/authAPI'
+
+const { setUser } = inject('auth')
 
 const router = useRouter() // Инициализация роутера
 
@@ -53,7 +55,7 @@ async function handleSignIn(e) {
             password: formData.value.password,
         })
         if (data) {
-            localStorage.setItem('userInfo', JSON.stringify(data))
+            setUser(data)
             router.push('/')
         }
     } catch (err) {
