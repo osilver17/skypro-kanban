@@ -55,6 +55,7 @@ async function handleSignIn(e) {
             password: formData.value.password,
         })
         if (data) {
+            console.log('data in signIn =', data)
             setUser(data)
             router.push('/')
         }

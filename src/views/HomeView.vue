@@ -3,8 +3,12 @@ import TaskDesk from '@/views/TaskDesk.vue'
 import BaseHeader from '@/views/BaseHeader.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { fetchTasks } from '@/services/api'
-import { ref, onMounted } from 'vue'
+import { inject, ref, onMounted } from 'vue'
 import { cardsAllStatus } from '@/mocks/tasks'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const { user } = inject('auth')
 
 const tasks = ref([])
 // ref([]) - массив для задач
@@ -16,16 +20,17 @@ const error = ref('')
 const getTasks = async () => {
     try {
         loading.value = true
-        const stringUserInfo = localStorage.getItem('userInfo')
-        const userInfo = JSON.parse(stringUserInfo)
-        const token = userInfo.token
+        // const stringUserInfo = localStorage.getItem('userInfo')
+        // const userInfo = JSON.parse(stringUserInfo)
+        // const token = userInfo.token
+        const token = user.value.token
         console.log('token =', token)
         const data = await fetchTasks({
             token: token,
         })
         if (data) {
             // Выясняем, что такое data
-            console.log('data =', data)
+            console.log('data в HomeView =', data)
             // Забираем из data массив задач в состояние tasks
             tasks.value = data.tasks
             console.log('tasks.value =', tasks.value)
@@ -55,6 +60,7 @@ const getTasks = async () => {
     } catch (err) {
         error.value = err
         alert(error.value)
+        router.push('/sign-in') // Отправляем на экран входа
     } finally {
         loading.value = false
     }

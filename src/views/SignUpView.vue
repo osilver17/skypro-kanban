@@ -60,7 +60,7 @@ async function handleSignUp(event) {
     try {
         const data = await signUp(formData.value)
         if (data) {
-            console.log('data =', data)
+            console.log('data in signUp =', data)
             setUser(data)
             router.push('/')
         }
