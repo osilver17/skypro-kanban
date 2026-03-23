@@ -9,12 +9,11 @@ defineProps({
 
 <template>
     <div class="cards__item">
-        <div class="cards__card card">
-            <div class="card__group">
+        <div :class="['cards__card', { card: !topic }]">
+            <div class="card__group" v-if="topic">
                 <div :class="['card__theme', classColor]">
                     <p :class="classColor">{{ topic }}</p>
                 </div>
-                <!-- <RouterLink :to="{ path: `/browse/${id}` }"> -->
                 <RouterLink :to="{ name: 'browse-card', params: { cardId } }">
                     <div class="card__btn">
                         <div></div>
@@ -24,10 +23,10 @@ defineProps({
                 </RouterLink>
             </div>
             <div class="card__content">
-                <a href="" target="_blank">
+                <a href="#">
                     <h3 class="card__title"><slot></slot></h3>
                 </a>
-                <div class="card__date">
+                <div class="card__date" v-if="topic">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="13"
@@ -183,5 +182,11 @@ defineProps({
         justify-content: stretch;
         padding: 15px 13px 19px;
     }
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 </style>

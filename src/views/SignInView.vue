@@ -73,7 +73,8 @@ async function handleSignIn(e) {
                     <form class="modal__form-login" id="formLogIn" action="#">
                         <input
                             class="modal__input"
-                            type="text"
+                            type="email"
+                            autocomplete="email"
                             name="login"
                             id="formlogin"
                             placeholder="Эл. почта"
@@ -82,6 +83,7 @@ async function handleSignIn(e) {
                         <input
                             class="modal__input"
                             type="password"
+                            autocomplete="current-password"
                             name="password"
                             id="formpassword"
                             placeholder="Пароль"

@@ -8,7 +8,7 @@ function tasksDistributionByColumns(statusArr, taskArr = []) {
     const statusArrays = []
     statusArr.forEach((element, id) => {
         statusArrays[id] = taskArr.filter((item) => item.status === element)
-        if (statusArrays[id].length === 0)
+        if (statusArrays[id].length === 0) {
             statusArrays[id].push({
                 _id: '0',
                 topic: '',
@@ -17,6 +17,7 @@ function tasksDistributionByColumns(statusArr, taskArr = []) {
                 date: '',
                 status: '',
             })
+        }
     })
     return statusArrays
 }

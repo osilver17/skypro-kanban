@@ -82,6 +82,7 @@ async function handleSignUp(event) {
                         <input
                             class="modal__input first-name"
                             type="text"
+                            autocomplete="current-password"
                             name="first-name"
                             id="first-name"
                             placeholder="Имя"
@@ -89,7 +90,8 @@ async function handleSignUp(event) {
                         />
                         <input
                             class="modal__input login"
-                            type="text"
+                            type="email"
+                            autocomplete="email"
                             name="login"
                             id="loginReg"
                             placeholder="Эл. почта"
@@ -98,6 +100,7 @@ async function handleSignUp(event) {
                         <input
                             class="modal__input password-first"
                             type="password"
+                            autocomplete="new-password"
                             name="password"
                             id="passwordFirst"
                             placeholder="Пароль"
