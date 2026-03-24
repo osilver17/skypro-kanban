@@ -30,7 +30,7 @@ const classes = [
     },
 ]
 const tasks = inject('tasksData')
-const taskData = ref({
+const newTask = ref({
     title: '',
     description: '',
     topic: '',
@@ -48,7 +48,7 @@ async function createNewTask(event) {
         const stringUserInfo = localStorage.getItem('userInfo')
         const userInfo = JSON.parse(stringUserInfo)
         const token = userInfo.token
-        console.log('taskData.value.topic =', taskData.value.topic)
+        console.log('newTask.value.topic =', newTask.value.topic)
 
         const data = await createTask(
             {
@@ -56,9 +56,9 @@ async function createNewTask(event) {
             },
 
             {
-                title: taskData.value.title,
-                description: taskData.value.description,
-                topic: taskData.value.topic,
+                title: newTask.value.title,
+                description: newTask.value.description,
+                topic: newTask.value.topic,
             },
         )
         if (data) {
@@ -98,7 +98,7 @@ async function createNewTask(event) {
                                     name="name"
                                     id="formTitle"
                                     placeholder="Введите название задачи..."
-                                    v-model="taskData.title"
+                                    v-model="newTask.title"
                                     autofocus
                                 />
                             </div>
@@ -109,7 +109,7 @@ async function createNewTask(event) {
                                     name="text"
                                     id="textArea"
                                     placeholder="Введите описание задачи..."
-                                    v-model="taskData.description"
+                                    v-model="newTask.description"
                                 ></textarea>
                             </div>
                         </form>
@@ -217,7 +217,7 @@ async function createNewTask(event) {
                                 ]"
                                 @click="
                                     ((categoryItemText = classItem.text),
-                                    (taskData.topic = classItem.text))
+                                    (newTask.topic = classItem.text))
                                 "
                             >
                                 <p :class="classItem.classType">{{ classItem.text }}</p>
