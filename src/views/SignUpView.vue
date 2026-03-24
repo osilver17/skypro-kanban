@@ -2,8 +2,10 @@
 import { inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { signUp } from '@/services/authAPI'
+import PreLoader from '@/components/PreLoader.vue'
 
 const { setUser } = inject('auth')
+const { loading } = inject('loading')
 
 const router = useRouter()
 
@@ -58,6 +60,7 @@ async function handleSignUp(event) {
         return
     }
     try {
+        loading.value = true
         const data = await signUp(formData.value)
         if (data) {
             console.log('data in signUp =', data)
@@ -67,12 +70,15 @@ async function handleSignUp(event) {
     } catch (err) {
         error.value = err.message
         console.log('error.value в catch =', error.value)
+    } finally {
+        loading.value = false
     }
 }
 </script>
 
 <template>
-    <div class="wrapper">
+    <PreLoader v-if="loading" />
+    <div v-else class="wrapper">
         <div class="container-signup">
             <div class="modal">
                 <div class="modal__block">

@@ -3,30 +3,28 @@ import TaskDesk from '@/views/TaskDesk.vue'
 import BaseHeader from '@/views/BaseHeader.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { fetchTasks } from '@/services/api'
-import { inject, ref, onMounted } from 'vue'
+import { inject, ref, onMounted, provide } from 'vue'
 import { cardsAllStatus } from '@/mocks/tasks'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 
-const router = useRouter()
-const { user } = inject('auth')
+// const router = useRouter()
+const { userInfo } = inject('auth')
+const { loading } = inject('loading')
+const { error } = inject('loading')
 
+// массив для задач
 const tasks = ref([])
-// ref([]) - массив для задач
-const loading = ref(false)
-// ref(false) - флажок, показывающий, что идёт загрузка
-const error = ref('')
-// ref('') - строка для текста ошибки
+provide('tasksData', tasks)
 
 const getTasks = async () => {
     try {
         loading.value = true
-        // const stringUserInfo = localStorage.getItem('userInfo')
-        // const userInfo = JSON.parse(stringUserInfo)
-        // const token = userInfo.token
-        const token = user.value.token
+        userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
+
+        const token = userInfo.value.token
         console.log('token =', token)
         const data = await fetchTasks({
-            token: token,
+            token,
         })
         if (data) {
             // Выясняем, что такое data
@@ -58,13 +56,17 @@ const getTasks = async () => {
             cardsAllStatus.push(...tasks.value)
         }
     } catch (err) {
+        console.log('err.message Home =', err.message)
+
         error.value = err
-        alert(error.value)
-        router.push('/sign-in') // Отправляем на экран входа
+        alert(error.value.message)
+        // router.push('/sign-in') // Отправляем на экран входа
     } finally {
         loading.value = false
     }
 }
+
+provide('getTasksProvide', getTasks)
 
 // onMounted вызывается один раз
 onMounted(() => {

@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { createTask } from '@/services/api.js'
 import PreLoader from '@/components/PreLoader.vue'
 import { useRouter } from 'vue-router'
-import { cardsAllStatus } from '@/mocks/tasks'
+// import { cardsAllStatus } from '@/mocks/tasks'
 
 const router = useRouter()
+
+const getTasks = inject('getTasksProvide')
 
 const loading = ref(false)
 // ref(false) - флаг, показывающий, что идёт загрузка
@@ -27,7 +29,7 @@ const classes = [
         text: 'Copywriting',
     },
 ]
-
+const tasks = inject('tasksData')
 const taskData = ref({
     title: '',
     description: '',
@@ -60,10 +62,13 @@ async function createNewTask(event) {
             },
         )
         if (data) {
-            console.log('data =', data.tasks)
-            cardsAllStatus.length = 0
-            cardsAllStatus.push(...data.tasks)
-
+            console.log('data.tasks =', data.tasks)
+            console.log('tasks =', tasks)
+            console.log('tasks.value =', tasks.value)
+            tasks.value.length = 0
+            tasks.value.push(...data.tasks)
+            console.log('tasks.value =', tasks.value)
+            getTasks()
             router.push('/')
         }
     } catch (err) {

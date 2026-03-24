@@ -1,6 +1,10 @@
 <script setup>
+import { inject } from 'vue'
 import TaskCard from './TaskCard.vue'
 import { cardsAllStatus } from '@/mocks/tasks'
+
+const tasks = inject('tasksData')
+const tasksArr = tasks.value.length !== 0 ? tasks.value : cardsAllStatus
 
 const cardsStatus = ['Без статуса', 'Нужно сделать', 'В работе', 'Тестирование', 'Готово']
 
@@ -22,7 +26,7 @@ function tasksDistributionByColumns(statusArr, taskArr = []) {
     return statusArrays
 }
 
-const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
+const statusArrays = tasksDistributionByColumns(cardsStatus, tasksArr)
 </script>
 
 <template>

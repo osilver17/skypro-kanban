@@ -2,8 +2,10 @@
 import { useRouter } from 'vue-router'
 import { inject, ref } from 'vue'
 import { signIn } from '@/services/authAPI'
+import PreLoader from '@/components/PreLoader.vue'
 
 const { setUser } = inject('auth')
+const { loading } = inject('loading')
 
 const router = useRouter() // Инициализация роутера
 
@@ -50,6 +52,7 @@ async function handleSignIn(e) {
         return
     }
     try {
+        loading.value = true
         const data = await signIn({
             login: formData.value.login,
             password: formData.value.password,
@@ -60,13 +63,21 @@ async function handleSignIn(e) {
             router.push('/')
         }
     } catch (err) {
-        error.value = err.message
+        console.log('SignInView: err = ', err)
+        if (err.message === 'Request failed with status code 400') {
+            error.value = 'Неверный логин или пароль'
+        } else {
+            error.value = err.message
+        }
+    } finally {
+        loading.value = false
     }
 }
 </script>
 
 <template>
-    <div class="wrapper">
+    <PreLoader v-if="loading" />
+    <div v-else class="wrapper">
         <div class="container-signin">
             <div class="modal">
                 <div class="modal__block">
