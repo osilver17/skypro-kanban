@@ -2,8 +2,20 @@
 import { useRoute } from 'vue-router'
 const route = useRoute()
 
-import { computed } from 'vue'
+import { computed, ref, inject } from 'vue'
+import { deleteTask } from '@/services/api'
 import { cardsAllStatus } from '@/mocks/tasks'
+import PreLoader from '@/components/PreLoader.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const { userInfo } = inject('auth')
+const getTasks = inject('getTasksProvide')
+const tasks = inject('tasksData')
+
+const loading = ref(false)
+const error = ref('')
 
 const task = computed(() => {
     return (
@@ -17,10 +29,41 @@ const task = computed(() => {
         }
     )
 })
+
+async function taskDeleter(event) {
+    event.preventDefault()
+    console.log('task.value._id =', task.value._id)
+
+    try {
+        loading.value = true
+        // userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        const token = userInfo.value.token
+        console.log('token =', token)
+        const data = await deleteTask(
+            {
+                token: token,
+            },
+            task.value._id,
+        )
+        if (data) {
+            tasks.value.length = 0
+            tasks.value.push(...data.tasks)
+            console.log('tasks.value =', tasks.value)
+            getTasks()
+            router.push('/')
+        }
+    } catch (err) {
+        error.value = err.message
+        alert(error.value)
+    } finally {
+        loading.value = false
+    }
+}
 </script>
 
 <template>
-    <div class="pop-browse">
+    <PreLoader v-if="loading" />
+    <div v-else class="pop-browse">
         <div class="pop-browse__container">
             <div class="pop-browse__block">
                 <div class="pop-browse__content">
@@ -166,7 +209,7 @@ const task = computed(() => {
                                 >
                             </button>
                             <button class="btn-browse__delete _btn-bor _hover03">
-                                <a href="#">Удалить задачу</a>
+                                <a href="#" @click="taskDeleter">Удалить задачу</a>
                             </button>
                         </div>
                         <button class="btn-browse__close _btn-bg _hover01">

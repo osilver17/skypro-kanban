@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const getTasks = inject('getTasksProvide')
+const { userInfo } = inject('auth')
 
 const loading = ref(false)
 // ref(false) - флаг, показывающий, что идёт загрузка
@@ -35,6 +36,7 @@ const newTask = ref({
     description: '',
     topic: '',
 })
+
 const error = ref('')
 // ref('') - строка для текста ошибки
 
@@ -45,8 +47,7 @@ async function createNewTask(event) {
 
     try {
         loading.value = true
-        const stringUserInfo = localStorage.getItem('userInfo')
-        const userInfo = JSON.parse(stringUserInfo)
+        // userInfo = JSON.parse(localStorage.getItem('userInfo'))
         const token = userInfo.token
         console.log('newTask.value.topic =', newTask.value.topic)
 
@@ -62,9 +63,6 @@ async function createNewTask(event) {
             },
         )
         if (data) {
-            console.log('data.tasks =', data.tasks)
-            console.log('tasks =', tasks)
-            console.log('tasks.value =', tasks.value)
             tasks.value.length = 0
             tasks.value.push(...data.tasks)
             console.log('tasks.value =', tasks.value)

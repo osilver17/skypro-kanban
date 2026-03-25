@@ -31,3 +31,18 @@ export async function createTask({ token }, { title, description, topic }) {
         throw new Error(error.message, { cause: error })
     }
 }
+
+export async function deleteTask({ token }, taskId) {
+    try {
+        const data = await axios.delete(API_URL + '/' + taskId, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+                "Content-Type": "",
+            },
+        })
+        return data.data
+        // Возвращаем именно data.data,
+    } catch (error) {
+        throw new Error(error.message, { cause: error })
+    }
+}
