@@ -49,6 +49,11 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, tasksArr)
 </template>
 
 <style scoped>
+.blank {
+    width: 100px;
+    height: 100px;
+    background-color: blueviolet;
+}
 .main__column {
     width: 20%;
     margin: 0 auto;
