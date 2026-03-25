@@ -183,6 +183,7 @@ defineProps({
         padding: 15px 13px 19px;
     }
 }
+
 .card {
     display: flex;
     align-items: center;
