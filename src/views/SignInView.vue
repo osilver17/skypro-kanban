@@ -99,7 +99,6 @@ async function handleSignIn(e) {
                             type="password"
                             autocomplete="current-password"
                             name="password"
-                            autocomplete="current-password"
                             id="formpassword"
                             placeholder="Пароль"
                             v-model="formData.password"

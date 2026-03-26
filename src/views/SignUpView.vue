@@ -89,7 +89,6 @@ async function handleSignUp(event) {
                         <input
                             class="modal__input first-name"
                             type="text"
-                            autocomplete="current-password"
                             name="first-name"
                             autocomplete="username"
                             id="first-name"
@@ -101,7 +100,6 @@ async function handleSignUp(event) {
                             type="email"
                             autocomplete="email"
                             name="login"
-                            autocomplete="email"
                             id="loginReg"
                             placeholder="Эл. почта"
                             v-model="formData.login"
