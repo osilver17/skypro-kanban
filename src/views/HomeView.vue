@@ -3,20 +3,65 @@ import TaskDesk from '@/views/TaskDesk.vue'
 import BaseHeader from '@/views/BaseHeader.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { fetchTasks } from '@/services/api'
-import { inject, ref, onMounted, provide } from 'vue'
+import { inject, ref, onMounted, provide, computed } from 'vue'
 import { cardsAllStatus } from '@/mocks/tasks'
-// import { useRouter } from 'vue-router'
+import { deleteTask } from '@/services/api'
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+const id = computed(() => route.params.id)
 
-// const router = useRouter()
+const task = computed(() => {
+    return (
+        cardsAllStatus.find((task) => task._id === id.value) || {
+            _id: '0',
+            topic: '',
+            classColor: '',
+            title: 'Задачи не существует',
+            date: '',
+            status: '',
+        }
+    )
+})
+
 const { userInfo } = inject('auth')
+
 const { loading } = inject('loading')
 const { error } = inject('loading')
 
 // массив для задач
 const tasks = ref([])
-provide('tasksData', tasks)
 
-const getTasks = async () => {
+async function taskDeleter(event) {
+    event.preventDefault()
+    console.log('task.value._id =', task.value._id)
+
+    try {
+        loading.value = true
+        userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
+        const token = userInfo.value.token
+        console.log('token =', token)
+        const data = await deleteTask(
+            {
+                token: token,
+            },
+            task.value._id,
+        )
+        if (data) {
+            tasks.value.length = 0
+            tasks.value.push(...data.tasks)
+            await getTasks()
+            router.push('/')
+        }
+    } catch (err) {
+        error.value = err.message
+        alert(error.value)
+    } finally {
+        loading.value = false
+    }
+}
+
+async function getTasks() {
     try {
         loading.value = true
         userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
@@ -34,7 +79,7 @@ const getTasks = async () => {
             console.log('tasks.value =', tasks.value)
             tasks.value.forEach((item) => {
                 item.date = new Date(item.date)
-                item.date = item.date.toLocaleDateString()
+                item.date = item.date.toLocaleDateString('ru-RU')
                 switch (item.topic) {
                     case 'Web Design':
                         item.classColor = '_orange'
@@ -54,6 +99,7 @@ const getTasks = async () => {
             // Так как массив cardsAllStatus меняется только здесь, то пока это нормально
             cardsAllStatus.length = 0
             cardsAllStatus.push(...tasks.value)
+            console.log('cardsAllStatus =', cardsAllStatus)
         }
     } catch (err) {
         console.log('err.message Home =', err.message)
@@ -67,6 +113,8 @@ const getTasks = async () => {
 }
 
 provide('getTasksProvide', getTasks)
+provide('tasksData', tasks)
+provide('taskDeleter', taskDeleter)
 
 // onMounted вызывается один раз
 onMounted(() => {

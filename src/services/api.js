@@ -32,6 +32,29 @@ export async function createTask({ token }, { title, description, topic }) {
     }
 }
 
+// const options = {
+//     title: "Новая задача 2!",
+//     topic: "Research",
+//     status: "Без статуса",
+//     description: "Подробное описание задачи",
+//     date: "2024-01-07T16:26:18.179Z",
+// }
+
+export async function editTask({ token }, options, taskId) {
+    try {
+        const data = await axios.put(API_URL + '/' + taskId, options, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+                "Content-Type": "",
+            },
+        })
+        return data.data
+        // Возвращаем именно data.data,
+    } catch (error) {
+        throw new Error(error.message, { cause: error })
+    }
+}
+
 export async function deleteTask({ token }, taskId) {
     try {
         const data = await axios.delete(API_URL + '/' + taskId, {

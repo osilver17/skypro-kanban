@@ -6,6 +6,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Без статуса',
+        description: 'Описание..........................................'
     },
 
     {
@@ -15,6 +16,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Без статуса',
+        description: 'Описание..........................................'
     },
 
     {
@@ -24,6 +26,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Без статуса',
+        description: 'Описание..........................................'
     },
 
     {
@@ -33,6 +36,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Без статуса',
+        description: 'Описание..........................................'
     },
 
     {
@@ -42,6 +46,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Без статуса',
+        description: 'Описание..........................................'
     },
 
     {
@@ -51,6 +56,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Нужно сделать',
+        description: 'Описание..........................................'
     },
 
     {
@@ -60,6 +66,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'В работе',
+        description: 'Описание..........................................'
     },
 
     {
@@ -69,6 +76,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'В работе',
+        description: 'Описание..........................................'
     },
 
     {
@@ -78,6 +86,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'В работе',
+        description: 'Описание..........................................'
     },
 
     {
@@ -87,6 +96,7 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Тестирование',
+        description: 'Описание..........................................'
     },
 
     {
@@ -96,5 +106,6 @@ export const cardsAllStatus = [
         title: 'Название задачи',
         date: '30.10.23',
         status: 'Готово',
+        description: 'Описание..........................................'
     },
 ]

@@ -1,64 +1,29 @@
 <script setup>
 import { useRoute } from 'vue-router'
 const route = useRoute()
+const id = computed(() => route.params.id)
 
 import { computed, ref, inject } from 'vue'
-import { deleteTask } from '@/services/api'
 import { cardsAllStatus } from '@/mocks/tasks'
 import PreLoader from '@/components/PreLoader.vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const { userInfo } = inject('auth')
-const getTasks = inject('getTasksProvide')
-const tasks = inject('tasksData')
 
 const loading = ref(false)
-const error = ref('')
+
+const taskDeleter = inject('taskDeleter')
 
 const task = computed(() => {
     return (
-        cardsAllStatus.find((task) => task._id === route.params.cardId) || {
+        cardsAllStatus.find((task) => task._id === id.value) || {
             _id: '0',
             topic: '',
             classColor: '',
             title: 'Задачи не существует',
             date: '',
             status: '',
+            description: '',
         }
     )
 })
-
-async function taskDeleter(event) {
-    event.preventDefault()
-    console.log('task.value._id =', task.value._id)
-
-    try {
-        loading.value = true
-        // userInfo = JSON.parse(localStorage.getItem('userInfo'))
-        const token = userInfo.value.token
-        console.log('token =', token)
-        const data = await deleteTask(
-            {
-                token: token,
-            },
-            task.value._id,
-        )
-        if (data) {
-            tasks.value.length = 0
-            tasks.value.push(...data.tasks)
-            console.log('tasks.value =', tasks.value)
-            getTasks()
-            router.push('/')
-        }
-    } catch (err) {
-        error.value = err.message
-        alert(error.value)
-    } finally {
-        loading.value = false
-    }
-}
 </script>
 
 <template>
@@ -204,7 +169,7 @@ async function taskDeleter(event) {
                     <div class="pop-browse__btn-browse">
                         <div class="btn-group">
                             <button class="btn-browse__edit _btn-bor _hover03">
-                                <RouterLink :to="{ name: 'edit-card', params: { cardId } }"
+                                <RouterLink :to="{ name: 'edit-card', params: { id } }"
                                     >Редактировать задачу</RouterLink
                                 >
                             </button>

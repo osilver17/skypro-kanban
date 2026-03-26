@@ -3,7 +3,6 @@ import { inject, ref } from 'vue'
 import { createTask } from '@/services/api.js'
 import PreLoader from '@/components/PreLoader.vue'
 import { useRouter } from 'vue-router'
-// import { cardsAllStatus } from '@/mocks/tasks'
 
 const router = useRouter()
 
@@ -31,6 +30,7 @@ const classes = [
     },
 ]
 const tasks = inject('tasksData')
+
 const newTask = ref({
     title: '',
     description: '',
@@ -47,9 +47,9 @@ async function createNewTask(event) {
 
     try {
         loading.value = true
-        // userInfo = JSON.parse(localStorage.getItem('userInfo'))
-        const token = userInfo.token
-        console.log('newTask.value.topic =', newTask.value.topic)
+        userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
+        const token = userInfo.value.token
+        console.log('token =', token)
 
         const data = await createTask(
             {
@@ -66,7 +66,25 @@ async function createNewTask(event) {
             tasks.value.length = 0
             tasks.value.push(...data.tasks)
             console.log('tasks.value =', tasks.value)
-            getTasks()
+            //     item.date = new Date(item.date)
+            //     item.date = item.date.toLocaleDateString('ru-RU')
+            //     switch (item.topic) {
+            //         case 'Web Design':
+            //             item.classColor = '_orange'
+            //             break
+            //         case 'Research':
+            //             item.classColor = '_green'
+            //             break
+            //         case 'Copywriting':
+            //             item.classColor = '_purple'
+            //             break
+
+            //         default:
+            //             break
+            //     }
+            // })
+
+            await getTasks()
             router.push('/')
         }
     } catch (err) {

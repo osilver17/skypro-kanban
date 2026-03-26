@@ -6,12 +6,12 @@ import { cardsAllStatus } from '@/mocks/tasks'
 const tasks = inject('tasksData')
 const tasksArr = tasks.value.length !== 0 ? tasks.value : cardsAllStatus
 
-const cardsStatus = ['Без статуса', 'Нужно сделать', 'В работе', 'Тестирование', 'Готово']
+const cardsStatus = ['без статуса', 'нужно сделать', 'в работе', 'тестирование', 'готово']
 
 function tasksDistributionByColumns(statusArr, taskArr = []) {
     const statusArrays = []
     statusArr.forEach((element, id) => {
-        statusArrays[id] = taskArr.filter((item) => item.status === element)
+        statusArrays[id] = taskArr.filter((item) => item.status.toLowerCase() === element)
         if (statusArrays[id].length === 0) {
             statusArrays[id].push({
                 _id: '0',
@@ -36,7 +36,7 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, tasksArr)
         </div>
         <div class="cards">
             <TaskCard
-                :cardId="card._id"
+                :id="card._id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"

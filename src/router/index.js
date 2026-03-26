@@ -23,7 +23,7 @@ const router = createRouter({
                             component: () => import('@/views/ExitModal.vue')
                         },
                         {
-                            path: '/browse/:cardId', // Маршрут для окна просмотра задачи
+                            path: '/browse/:id', // Маршрут для окна просмотра задачи
                             name: 'browse-card',
                             component: () => import('@/views/TaskBrowse.vue')
                         },
@@ -32,7 +32,7 @@ const router = createRouter({
                             component: () => import('@/views/TaskCreating.vue')
                         },
                         {
-                            path: '/task-edit/:cardId', // Маршрут для окна редактирования задачи
+                            path: '/task-edit/:id', // Маршрут для окна редактирования задачи
                             name: 'edit-card',
                             component: () => import('@/views/TaskEditing.vue')
                         },

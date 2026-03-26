@@ -1,31 +1,116 @@
 <script setup>
-import { useRoute } from 'vue-router'
-const route = useRoute()
+import { useRoute, useRouter } from 'vue-router'
 
-import { computed } from 'vue'
+import PreLoader from '@/components/PreLoader.vue'
+import { editTask } from '@/services/api.js'
+
+import { computed, inject, ref } from 'vue'
 import { cardsAllStatus } from '@/mocks/tasks'
+
+const router = useRouter()
+const route = useRoute()
+const id = computed(() => route.params.id)
+
+const getTasks = inject('getTasksProvide')
+const { userInfo } = inject('auth')
+const loading = ref(false)
+const error = ref('')
+const tasks = inject('tasksData')
+const taskDeleter = inject('taskDeleter')
 
 const task = computed(() => {
     return (
-        cardsAllStatus.find((task) => task._id === route.params.cardId) || {
+        cardsAllStatus.find((task) => task._id === id.value) || {
             _id: '0',
             topic: '',
             classColor: '',
             title: 'Задачи не существует',
             date: '',
             status: '',
+            description: '',
         }
     )
 })
+
+//  {
+//       "_id": "659ad0aad0e154bebca2b6b3",
+//       "userId": "659abd3ad0e154bebca2b6b7",
+//       "title": "Новая задача 1!",
+//       "topic": "Research",
+//       "date": "2024-01-07T16:26:18.179Z",
+//       "description": "Подробное описание задачи",
+//       "status": "Без статуса"
+//     },
+
+const firstStateTitle = ref(task.value.title)
+const firstStateStatus = ref(task.value.status)
+const firstStateDescription = ref(task.value.description)
+function editingCansell() {
+    task.value.title = firstStateTitle.value
+    task.value.status = firstStateStatus.value
+    task.value.description = firstStateDescription.value
+}
+
+async function taskEditing(event) {
+    event.preventDefault()
+
+    try {
+        loading.value = true
+        userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
+        const token = userInfo.value.token
+        console.log('token in Editing =', token)
+
+        const editingDate = new Date()
+
+        const data = await editTask(
+            {
+                token: token,
+            },
+
+            {
+                title: task.value.title,
+                topic: task.value.topic,
+                status: task.value.status.toLowerCase(),
+                description: task.value.description,
+                date: editingDate,
+            },
+
+            task.value._id,
+        )
+        if (data) {
+            tasks.value.length = 0
+            tasks.value.push(...data.tasks)
+            console.log('tasks.value =', tasks.value)
+            await getTasks()
+            router.push('/')
+        }
+    } catch (err) {
+        error.value = err.message
+        alert(error.value)
+    } finally {
+        loading.value = false
+    }
+}
 </script>
 
 <template>
-    <div class="pop-browse" id="popBrowse">
+    <PreLoader v-if="loading" />
+    <div v-else class="pop-browse" id="popBrowse">
         <div class="pop-browse__container">
             <div class="pop-browse__block">
                 <div class="pop-browse__content">
                     <div class="pop-browse__top-block">
-                        <h3 class="pop-browse__ttl">{{ task.title }}</h3>
+                        <div class="pop-browse__ttl">
+                            <input
+                                class="modal__input modal_edit"
+                                type="text"
+                                autocomplete="text"
+                                name="status"
+                                id="formStatus"
+                                :placeholder="task.status"
+                                v-model="task.title"
+                            />
+                        </div>
                         <div
                             :class="[
                                 'categories__theme',
@@ -40,8 +125,16 @@ const task = computed(() => {
                     <div class="pop-browse__status status">
                         <p class="status__p subttl">Статус</p>
                         <div class="status__themes">
-                            <div class="status__theme _gray">
-                                <p class="_gray">{{ task.status }}</p>
+                            <div>
+                                <input
+                                    class="modal__input"
+                                    type="text"
+                                    autocomplete="text"
+                                    name="status"
+                                    id="formStatus"
+                                    :placeholder="task.status"
+                                    v-model="task.status"
+                                />
                             </div>
                         </div>
                     </div>
@@ -53,8 +146,8 @@ const task = computed(() => {
                                     class="form-browse__area"
                                     name="text"
                                     id="textArea01"
-                                    readonly
                                     placeholder="Введите описание задачи..."
+                                    v-model="task.description"
                                 ></textarea>
                             </div>
                         </form>
@@ -163,7 +256,7 @@ const task = computed(() => {
                                 <a href="#">Редактировать задачу</a>
                             </button>
                             <button class="btn-browse__delete _btn-bor _hover03">
-                                <a href="#">Удалить задачу</a>
+                                <a href="#" @click="taskDeleter">Удалить задачу</a>
                             </button>
                         </div>
                         <button class="btn-browse__close _btn-bg _hover01">
@@ -173,13 +266,13 @@ const task = computed(() => {
                     <div class="pop-browse__btn-edit">
                         <div class="btn-group">
                             <button class="btn-edit__edit _btn-bg _hover01">
-                                <a href="#">Сохранить</a>
+                                <a href="#" @click="taskEditing">Сохранить</a>
                             </button>
                             <button class="btn-edit__edit _btn-bor _hover03">
-                                <RouterLink to="/">Отменить</RouterLink>
+                                <a href="#" @click="editingCansell">Отменить</a>
                             </button>
                             <button class="btn-edit__delete _btn-bor _hover03" id="btnDelete">
-                                <a href="#">Удалить задачу</a>
+                                <a href="#" @click="taskDeleter">Удалить задачу</a>
                             </button>
                         </div>
                         <button class="btn-edit__close _btn-bg _hover01">
@@ -193,6 +286,37 @@ const task = computed(() => {
 </template>
 
 <style scoped>
+.modal__input {
+    width: 100%;
+    min-width: 100%;
+    border-radius: 8px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    outline: none;
+    padding: 10px 8px;
+}
+.modal__input::-moz-placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: -0.28px;
+    color: #94a6be;
+}
+.modal__input::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: -0.28px;
+    color: #94a6be;
+}
+
+.modal_edit {
+    font-size: 20px;
+    font-weight: 700;
+    padding: 6px 8px;
+}
+
 .pop-browse:target {
     display: block;
 }
@@ -325,20 +449,6 @@ const task = computed(() => {
     margin-bottom: 11px;
 }
 
-.status__theme {
-    border-radius: 24px;
-    border: 0.7px solid rgba(148, 166, 190, 0.4);
-    color: #94a6be;
-    padding: 11px 14px 10px;
-    margin-right: 7px;
-    margin-bottom: 7px;
-}
-.status__theme p {
-    font-size: 14px;
-    line-height: 1;
-    letter-spacing: -0.14px;
-}
-
 .status__themes {
     display: flex;
     flex-wrap: wrap;
@@ -363,11 +473,6 @@ const task = computed(() => {
 
 ._hide {
     display: none;
-}
-
-._gray {
-    background: #94a6be;
-    color: #ffffff;
 }
 
 .form-browse__block {

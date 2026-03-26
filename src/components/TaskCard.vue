@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    cardId: String,
+    id: String,
     classColor: String,
     date: String,
     topic: String,
@@ -14,7 +14,7 @@ defineProps({
                 <div :class="['card__theme', classColor]">
                     <p :class="classColor">{{ topic }}</p>
                 </div>
-                <RouterLink :to="{ name: 'browse-card', params: { cardId } }">
+                <RouterLink :to="{ name: 'browse-card', params: { id } }">
                     <div class="card__btn">
                         <div></div>
                         <div></div>
