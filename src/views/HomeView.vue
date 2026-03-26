@@ -68,6 +68,7 @@ async function getTasks() {
 
         const token = userInfo.value.token
         console.log('token =', token)
+
         const data = await fetchTasks({
             token,
         })
@@ -77,6 +78,7 @@ async function getTasks() {
             // Забираем из data массив задач в состояние tasks
             tasks.value = data.tasks
             console.log('tasks.value =', tasks.value)
+
             tasks.value.forEach((item) => {
                 item.date = new Date(item.date)
                 item.date = item.date.toLocaleDateString('ru-RU')
