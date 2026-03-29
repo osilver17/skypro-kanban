@@ -1,10 +1,14 @@
-<script setup></script>
+<script setup>
+import { inject } from 'vue'
+const { userInfo } = inject('auth')
+console.log('userInfo.value =', userInfo.value)
+</script>
 
 <template>
     <div class="header__pop-user-set pop-user-set">
         <!-- <a href="">x</a> -->
-        <p class="pop-user-set__name">Ivan Ivanov</p>
-        <p class="pop-user-set__mail">ivan.ivanov@gmail.com</p>
+        <p class="pop-user-set__name">{{ userInfo.name }}</p>
+        <p class="pop-user-set__mail">{{ userInfo.login }}</p>
         <div class="pop-user-set__theme">
             <p>Темная тема</p>
             <input type="checkbox" class="checkbox" name="checkbox" />

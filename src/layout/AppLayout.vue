@@ -5,10 +5,11 @@
 <script setup>
 import { provide, ref } from 'vue'
 
+// Флаг загрузки
 const loading = ref(false)
-// ref(false) - флажок, показывающий, что идёт загрузка
+
+// Строка для текста ошибки
 const error = ref('')
-// ref('') - строка для текста ошибки
 
 // Передаём всем потомкам главной страницы данные о словах, загрузке и ошибке
 provide('loading', { loading, error })

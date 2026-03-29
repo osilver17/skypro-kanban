@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import UserSet from '@/views/UserSet.vue'
+import { inject } from 'vue'
+const { userInfo } = inject('auth')
 
 const isVisible = ref('false')
 function showUserSet() {
@@ -26,7 +28,9 @@ function showUserSet() {
                     <button class="header__btn-main-new _hover01" id="btnMainNew">
                         <RouterLink to="/new-task">Создать новую задачу</RouterLink>
                     </button>
-                    <a href="#" class="header__user _hover02" @click="showUserSet">Ivan Ivanov</a>
+                    <a href="#" class="header__user _hover02" @click="showUserSet">{{
+                        userInfo.name
+                    }}</a>
                     <UserSet v-show="!isVisible" />
                 </nav>
             </div>
