@@ -3,10 +3,9 @@ import { inject } from 'vue'
 import TaskCard from './TaskCard.vue'
 import { cardsAllStatus } from '@/mocks/tasks'
 
+const cardsStatus = inject('cardsStatus')
 const tasks = inject('tasksData')
 const tasksArr = tasks.value.length !== 0 ? tasks.value : cardsAllStatus
-
-const cardsStatus = ['без статуса', 'нужно сделать', 'в работе', 'тестирование', 'готово']
 
 function tasksDistributionByColumns(statusArr, taskArr = []) {
     const statusArrays = []

@@ -5,22 +5,33 @@
 <script setup>
 import { provide, ref } from 'vue'
 
+// Массив статусов задач
+const cardsStatus = ['без статуса', 'нужно сделать', 'в работе', 'тестирование', 'готово']
+
 // Флаг загрузки
 const loading = ref(false)
 
 // Строка для текста ошибки
 const error = ref('')
 
-// Передаём всем потомкам главной страницы данные о словах, загрузке и ошибке
+const userInfo = ref(null)
+userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
+
+// Передаём всем потомкам главной страницы данные
+provide('cardsStatus', cardsStatus)
+
 provide('loading', { loading, error })
 
-const userInfo = ref(null)
+provide('auth', {
+    userInfo: userInfo,
+    setUser: setUserInfo,
+    removeUser: removeUserInfo,
+})
 
 // Функция, которая сохраняет данные о пользователе в состояние и ЛС
 function setUserInfo(value) {
     try {
         localStorage.setItem('userInfo', JSON.stringify(value))
-        userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
         console.log('AppLayout: userInfo.value =', userInfo.value)
     } catch (e) {
         console.error('ошибка:', e)
@@ -37,14 +48,6 @@ function removeUserInfo() {
         console.error('ошибка:', e)
     }
 }
-
-// Передаем наши данные во всё приложение:
-// на главную страницу, на страницы входа и регистрацию
-provide('auth', {
-    userInfo: userInfo,
-    setUser: setUserInfo,
-    removeUser: removeUserInfo,
-})
 </script>
 
 <style scoped></style>
