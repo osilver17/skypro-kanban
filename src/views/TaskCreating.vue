@@ -2,7 +2,6 @@
 import { inject, ref, watch } from 'vue'
 import { createTask } from '@/services/api.js'
 import PreLoader from '@/components/PreLoader.vue'
-// import VCalendar from '@/components/VCalendar.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -36,16 +35,17 @@ const newTask = ref({
     title: '',
     description: '',
     topic: '',
-    status: '',
-    date: '',
+    status: 'без статуса',
+    date: new Date(),
 })
+console.log('TaskCreating: newTask.value.date =', newTask.value.date)
 
 const newTaskErrors = ref({
     title: '',
     description: '',
     topic: '',
     status: '',
-    date: '',
+    date: null,
 })
 
 const taskError = ref('')
@@ -55,23 +55,19 @@ const categoryItemText = ref('')
 // Подключаем календарь и статус
 import Datepicker from 'vue3-datepicker'
 import { ru } from 'date-fns/locale' // Импортируем русскую локаль
-const selectedDate = ref(null)
-watch(selectedDate, () => {
-    newTask.value.date = selectedDate.value.toISOString()
-    console.log('selectedDate =', selectedDate.value.toISOString())
-})
 
-const selectedStatus = ref(null)
+const selectedDate = ref(new Date())
+watch(selectedDate, () => {
+    newTask.value.date = selectedDate.value
+    console.log('selectedDate =', selectedDate.value)
+})
+const lowerLimit = ref(new Date())
+
+const selectedStatus = ref(newTask.value.status)
 watch(selectedStatus, () => {
     newTask.value.status = selectedStatus.value
     console.log('selectedStatus =', selectedStatus.value)
 })
-
-// function isWeekend(date) {
-//     // Отключать выходные (суббота, воскресенье)
-//     const day = date.getDay()
-//     return day === 0 || day === 6
-// }
 
 async function createNewTask(event) {
     event.preventDefault()
@@ -94,31 +90,31 @@ async function createNewTask(event) {
                 topic: newTask.value.topic,
                 description: newTask.value.description,
                 status: newTask.value.status,
-                date: newTask.value.date,
+                date: newTask.value.date.toISOString(),
             },
         )
         if (data) {
             console.log('data.tasks =', data.tasks)
+            data.tasks.forEach((item) => {
+                item.date = new Date(item.date)
+                switch (item.topic) {
+                    case 'Web Design':
+                        item.classColor = '_orange'
+                        break
+                    case 'Research':
+                        item.classColor = '_green'
+                        break
+                    case 'Copywriting':
+                        item.classColor = '_purple'
+                        break
+
+                    default:
+                        break
+                }
+            })
             tasks.value.length = 0
             tasks.value.push(...data.tasks)
             console.log('tasks.value =', tasks.value)
-            //     item.date = new Date(item.date)
-            //     item.date = item.date.toLocaleDateString('ru-RU')
-            //     switch (item.topic) {
-            //         case 'Web Design':
-            //             item.classColor = '_orange'
-            //             break
-            //         case 'Research':
-            //             item.classColor = '_green'
-            //             break
-            //         case 'Copywriting':
-            //             item.classColor = '_purple'
-            //             break
-
-            //         default:
-            //             break
-            //     }
-            // })
 
             await getTasks()
             router.push('/')
@@ -217,8 +213,7 @@ function validateNewTask() {
                                     <p class="calendar__ttl subttl">Дата исполнения</p>
                                     <Datepicker
                                         v-model="selectedDate"
-                                        :min-date="new Date()"
-                                        :format="(date) => date.toLocaleDateString('ru-RU')"
+                                        :lower-limit="lowerLimit"
                                         :locale="ru"
                                     />
                                     <div class="calendar__period">
@@ -230,7 +225,7 @@ function validateNewTask() {
                                 </div>
                                 <div class="local-wrapper">
                                     <p class="calendar__ttl subttl">Статус задачи</p>
-                                    <select v-model="selectedStatus">
+                                    <select v-model="selectedStatus" class="modal__input">
                                         <option
                                             v-for="(status, id) in cardsStatus"
                                             :value="status"
@@ -289,6 +284,31 @@ function validateNewTask() {
 </template>
 
 <style scoped>
+.modal__input {
+    width: 100%;
+    min-width: 100%;
+    border-radius: 8px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    outline: none;
+    padding: 10px 8px;
+}
+.modal__input::-moz-placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: -0.28px;
+    color: #94a6be;
+}
+.modal__input::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: -0.28px;
+    color: #94a6be;
+}
+
 .calendar__wrapper {
     width: 100%;
     display: flex;

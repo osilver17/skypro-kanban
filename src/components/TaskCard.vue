@@ -2,9 +2,16 @@
 defineProps({
     id: String,
     classColor: String,
-    date: String,
+    date: Date,
     topic: String,
 })
+
+// Опции для преобразования дат в задачах
+const dateOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+}
 </script>
 
 <template>
@@ -55,7 +62,7 @@ defineProps({
                             </clipPath>
                         </defs>
                     </svg>
-                    <p>{{ date }}</p>
+                    <p>{{ date.toLocaleString('ru-RU', dateOptions) }}</p>
                 </div>
             </div>
         </div>

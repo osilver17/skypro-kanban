@@ -4,7 +4,7 @@ export const cardsAllStatus = [
         topic: 'Web Design',
         classColor: "_orange",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Без статуса',
         description: 'Описание..........................................'
     },
@@ -14,7 +14,7 @@ export const cardsAllStatus = [
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Без статуса',
         description: 'Описание..........................................'
     },
@@ -24,7 +24,7 @@ export const cardsAllStatus = [
         topic: 'Web Design',
         classColor: "_orange",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Без статуса',
         description: 'Описание..........................................'
     },
@@ -34,7 +34,7 @@ export const cardsAllStatus = [
         topic: 'Copywriting',
         classColor: "_purple",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Без статуса',
         description: 'Описание..........................................'
     },
@@ -44,7 +44,7 @@ export const cardsAllStatus = [
         topic: 'Web Design',
         classColor: "_orange",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Без статуса',
         description: 'Описание..........................................'
     },
@@ -54,7 +54,7 @@ export const cardsAllStatus = [
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Нужно сделать',
         description: 'Описание..........................................'
     },
@@ -64,7 +64,7 @@ export const cardsAllStatus = [
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'В работе',
         description: 'Описание..........................................'
     },
@@ -74,7 +74,7 @@ export const cardsAllStatus = [
         topic: 'Copywriting',
         classColor: "_purple",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'В работе',
         description: 'Описание..........................................'
     },
@@ -84,7 +84,7 @@ export const cardsAllStatus = [
         topic: 'Web Design',
         classColor: "_orange",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'В работе',
         description: 'Описание..........................................'
     },
@@ -94,7 +94,7 @@ export const cardsAllStatus = [
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Тестирование',
         description: 'Описание..........................................'
     },
@@ -104,7 +104,7 @@ export const cardsAllStatus = [
         topic: 'Research',
         classColor: "_green",
         title: 'Название задачи',
-        date: '30.10.23',
+        date: "2024-01-07T16:26:18.179Z",
         status: 'Готово',
         description: 'Описание..........................................'
     },

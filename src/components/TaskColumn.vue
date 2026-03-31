@@ -3,9 +3,16 @@ import { inject } from 'vue'
 import TaskCard from './TaskCard.vue'
 import { cardsAllStatus } from '@/mocks/tasks'
 
+cardsAllStatus.forEach((item) => {
+    item.date = new Date(item.date)
+})
+
+console.log('TaskColumn: cardsAllStatus =', cardsAllStatus)
+
 const cardsStatus = inject('cardsStatus')
 const tasks = inject('tasksData')
 const tasksArr = tasks.value.length !== 0 ? tasks.value : cardsAllStatus
+console.log('TaskColumn: tasksArr =', tasksArr)
 
 function tasksDistributionByColumns(statusArr, taskArr = []) {
     const statusArrays = []
@@ -17,7 +24,7 @@ function tasksDistributionByColumns(statusArr, taskArr = []) {
                 topic: '',
                 classColor: '',
                 title: 'Задач нет',
-                date: '',
+                date: null,
                 status: '',
             })
         }
@@ -35,11 +42,11 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, tasksArr)
         </div>
         <div class="cards">
             <TaskCard
+                v-for="card in statusArrays[index]"
                 :id="card._id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
-                v-for="card in statusArrays[index]"
                 :key="card._id"
                 >{{ card.title }}</TaskCard
             >

@@ -18,7 +18,7 @@ const task = computed(() => {
             topic: '',
             classColor: '',
             title: 'Задачи не существует',
-            date: '',
+            date: null,
             status: '',
         }
     )
@@ -81,7 +81,7 @@ async function getTasks() {
 
             tasks.value.forEach((item) => {
                 item.date = new Date(item.date)
-                item.date = item.date.toLocaleDateString('ru-RU')
+
                 switch (item.topic) {
                     case 'Web Design':
                         item.classColor = '_orange'
@@ -105,9 +105,12 @@ async function getTasks() {
         }
     } catch (err) {
         console.log('err.message Home =', err.message)
-
         error.value = err
         alert(error.value.message)
+
+        cardsAllStatus.forEach((item) => {
+            item.date = new Date(item.date)
+        })
         // router.push('/sign-in') // Отправляем на экран входа
     } finally {
         loading.value = false
