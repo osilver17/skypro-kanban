@@ -35,8 +35,6 @@ const task = computed(() => {
         description: '',
     }
 
-    console.log('TaskEditing: seekedTask.date =', seekedTask.date)
-
     return seekedTask
 })
 
@@ -46,13 +44,11 @@ import { ru } from 'date-fns/locale' // Импортируем русскую л
 const selectedDate = ref(task.value.date)
 watch(selectedDate, () => {
     task.value.date = selectedDate.value
-    console.log('selectedDate =', selectedDate.value)
 })
 
 const selectedStatus = ref(task.value.status)
 watch(selectedStatus, () => {
     task.value.status = selectedStatus.value
-    console.log('selectedStatus =', selectedStatus.value)
 })
 
 // Отмена редактирования
