@@ -1,7 +1,7 @@
 <script setup>
 // Опции для преобразования дат в задачах
 const dateOptions = {
-    day: 'numeric',
+    day: '2-digit',
     month: '2-digit',
     year: '2-digit',
 }
