@@ -105,9 +105,12 @@ async function taskDeleter(event) {
         if (data) {
             tasks.value.length = 0
             tasks.value.push(...data.tasks)
-            console.log('taskDeleter: tasks.value', tasks.value)
 
             addTaskCategory(tasks.value)
+            // Заполняем массив данными
+            arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
+
+            console.log('taskDeleter: tasks.value', tasks.value)
             router.push('/')
         }
     } catch (err) {
