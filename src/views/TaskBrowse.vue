@@ -14,7 +14,7 @@ import PreLoader from '@/components/PreLoader.vue'
 
 const loading = ref(false)
 
-const tasks = inject('tasksData')
+const { tasks } = inject('tasksData')
 console.log('TaskBrose: tasks =', tasks)
 
 const taskDeleter = inject('taskDeleter')

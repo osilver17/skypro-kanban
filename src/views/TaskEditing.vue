@@ -21,7 +21,7 @@ const getTasks = inject('getTasksProvide')
 const { userInfo } = inject('auth')
 const loading = ref(false)
 const error = ref('')
-const tasks = inject('tasksData')
+const { tasks } = inject('tasksData')
 const taskDeleter = inject('taskDeleter')
 
 const task = computed(() => {
@@ -30,7 +30,7 @@ const task = computed(() => {
         topic: '',
         classColor: '',
         title: 'Задачи не существует',
-        date: '2024-01-07T16:26:18.179Z',
+        date: new Date(),
         status: '',
         description: '',
     }

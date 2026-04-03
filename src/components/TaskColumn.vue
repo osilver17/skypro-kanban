@@ -1,38 +1,9 @@
 <script setup>
 import { inject } from 'vue'
 import TaskCard from './TaskCard.vue'
-import { cardsAllStatus } from '@/mocks/tasks'
 
-cardsAllStatus.forEach((item) => {
-    item.date = new Date(item.date)
-})
-
-console.log('TaskColumn: cardsAllStatus =', cardsAllStatus)
-
-const cardsStatus = inject('cardsStatus')
-const tasks = inject('tasksData')
-const tasksArr = tasks.value.length !== 0 ? tasks.value : cardsAllStatus
-console.log('TaskColumn: tasksArr =', tasksArr)
-
-function tasksDistributionByColumns(statusArr, taskArr = []) {
-    const statusArrays = []
-    statusArr.forEach((element, id) => {
-        statusArrays[id] = taskArr.filter((item) => item.status.toLowerCase() === element)
-        if (statusArrays[id].length === 0) {
-            statusArrays[id].push({
-                _id: '0',
-                topic: '',
-                classColor: '',
-                title: 'Задач нет',
-                date: null,
-                status: '',
-            })
-        }
-    })
-    return statusArrays
-}
-
-const statusArrays = tasksDistributionByColumns(cardsStatus, tasksArr)
+const { arrsOfStatuses, cardsStatus } = inject('tasksData')
+console.log('TaskColumn: arrsOfStatuses.value = ', arrsOfStatuses.value)
 </script>
 
 <template>
@@ -42,7 +13,7 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, tasksArr)
         </div>
         <div class="cards">
             <TaskCard
-                v-for="card in statusArrays[index]"
+                v-for="card in arrsOfStatuses[index]"
                 :id="card._id"
                 :classColor="card.classColor"
                 :date="card.date"

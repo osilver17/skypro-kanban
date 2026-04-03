@@ -1,13 +1,13 @@
 <script setup>
+import PreLoader from '@/components/PreLoader.vue'
+import VCalendar from '@/components/VCalendar.vue'
 import { inject, ref, watch } from 'vue'
 import { createTask } from '@/services/api.js'
-import PreLoader from '@/components/PreLoader.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const cardsStatus = inject('cardsStatus')
-const getTasks = inject('getTasksProvide')
+const addTaskCategory = inject('addTaskCategory')
 const { userInfo } = inject('auth')
 
 const loading = ref(false)
@@ -29,14 +29,15 @@ const classes = [
         text: 'Copywriting',
     },
 ]
-const tasks = inject('tasksData')
+const { tasks, arrsOfStatuses, cardsStatus, updateTasks, tasksDistributionByColumns } =
+    inject('tasksData')
 
 const newTask = ref({
     title: '',
     description: '',
     topic: '',
     status: 'без статуса',
-    date: new Date(),
+    date: null,
 })
 console.log('TaskCreating: newTask.value.date =', newTask.value.date)
 
@@ -52,21 +53,11 @@ const taskError = ref('')
 
 const categoryItemText = ref('')
 
-// Подключаем календарь и статус
-import Datepicker from 'vue3-datepicker'
-import { ru } from 'date-fns/locale' // Импортируем русскую локаль
-
-const selectedDate = ref(new Date())
+const selectedDate = ref(null)
 watch(selectedDate, () => {
     newTask.value.date = selectedDate.value
-    console.log('selectedDate =', selectedDate.value)
-})
-const lowerLimit = ref(new Date())
-
-const selectedStatus = ref(newTask.value.status)
-watch(selectedStatus, () => {
-    newTask.value.status = selectedStatus.value
-    console.log('selectedStatus =', selectedStatus.value)
+    console.log('!!!!!TaskCreating: selectedDate =', selectedDate.value)
+    console.log('!!!!!TaskCreating: newTask.value.date =', newTask.value.date)
 })
 
 async function createNewTask(event) {
@@ -94,29 +85,11 @@ async function createNewTask(event) {
             },
         )
         if (data) {
-            console.log('data.tasks =', data.tasks)
-            data.tasks.forEach((item) => {
-                item.date = new Date(item.date)
-                switch (item.topic) {
-                    case 'Web Design':
-                        item.classColor = '_orange'
-                        break
-                    case 'Research':
-                        item.classColor = '_green'
-                        break
-                    case 'Copywriting':
-                        item.classColor = '_purple'
-                        break
-
-                    default:
-                        break
-                }
-            })
-            tasks.value.length = 0
-            tasks.value.push(...data.tasks)
-            console.log('tasks.value =', tasks.value)
-
-            await getTasks()
+            addTaskCategory(data.tasks)
+            console.log('!!!!!!!!! TC до апдейта: tasks.value =', tasks.value)
+            updateTasks(data.tasks)
+            console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
+            arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
             router.push('/')
         }
     } catch (err) {
@@ -128,6 +101,8 @@ async function createNewTask(event) {
 }
 
 function validateNewTask() {
+    console.log('newTask.value.date =', newTask.value.date)
+
     let isValid = true
     taskError.value = ''
     // Сбросим все ошибки
@@ -159,14 +134,12 @@ function validateNewTask() {
         taskError.value = 'Пожалуйста, выберите дату выполнения задачи'
         isValid = false
     }
-    // Проверка статуса задачи
-    if (!newTask.value.status) {
-        newTaskErrors.value.status = true
-        taskError.value = 'Пожалуйста, выберите статус задачи'
-        isValid = false
-    }
 
     return isValid
+}
+
+function getDeadlineDate(date) {
+    selectedDate.value = date
 }
 </script>
 
@@ -208,40 +181,7 @@ function validateNewTask() {
                         </form>
 
                         <div class="pop-new-card__calendar calendar">
-                            <div class="calendar__block calendar__wrapper">
-                                <div class="local-wrapper">
-                                    <p class="calendar__ttl subttl">Дата исполнения</p>
-                                    <Datepicker
-                                        v-model="selectedDate"
-                                        :lower-limit="lowerLimit"
-                                        :locale="ru"
-                                    />
-                                    <div class="calendar__period">
-                                        <p class="calendar__p date-end">
-                                            Выберите срок исполнения
-                                            <span class="date-control"></span>.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="local-wrapper">
-                                    <p class="calendar__ttl subttl">Статус задачи</p>
-                                    <select v-model="selectedStatus" class="modal__input">
-                                        <option
-                                            v-for="(status, id) in cardsStatus"
-                                            :value="status"
-                                            :key="id"
-                                        >
-                                            {{ status }}
-                                        </option>
-                                    </select>
-                                    <div class="calendar__period">
-                                        <p class="calendar__p date-end">
-                                            Выберите статус задачи
-                                            <span class="date-control"></span>.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <VCalendar @pick-date="getDeadlineDate" />
                         </div>
                     </div>
                     <div class="pop-new-card__categories categories">
@@ -262,16 +202,6 @@ function validateNewTask() {
                             >
                                 <p :class="classItem.classType">{{ classItem.text }}</p>
                             </div>
-                            <!-- <div
-                                class="categories__theme _green"
-                                :class="{ '_active-category': isActive, disabled: isDisabled }"
-                                @click="handleClick"
-                            >
-                                <p class="_green">Research</p>
-                            </div>
-                            <div class="categories__theme _purple" @click="handleClick">
-                                <p class="_purple">Copywriting</p>
-                            </div> -->
                         </div>
                     </div>
                     <button class="form-new__create _hover01" id="btnCreate" @click="createNewTask">
@@ -392,7 +322,7 @@ select {
 }
 .pop-new-card__wrap {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
 }
 .pop-new-card__form {
@@ -400,23 +330,6 @@ select {
     width: 100%;
     display: block;
     margin-bottom: 20px;
-}
-
-.pop-new-card__container {
-    padding: 0;
-    justify-content: flex-start;
-}
-.pop-new-card__block {
-    padding: 20px 16px 32px;
-}
-.pop-new-card__form {
-    max-width: 100%;
-    width: 100%;
-    display: block;
-}
-
-.pop-new-card__calendar {
-    width: 100%;
 }
 
 .form-new__block {
@@ -540,7 +453,7 @@ select {
 }
 
 .calendar {
-    width: 250px;
+    width: 182px;
     margin-bottom: 20px;
 }
 .calendar__ttl {
@@ -626,11 +539,6 @@ select {
 .calendar__period {
     margin-top: 10px;
     padding: 0 7px;
-}
-
-._cell-day:hover {
-    color: #94a6be;
-    background-color: #eaeef6;
 }
 
 ._current {
@@ -723,6 +631,14 @@ select {
     .form-new__create {
         width: 100%;
         height: 40px;
+    }
+    .pop-new-card__block {
+        padding: 20px 16px 32px;
+    }
+    .pop-new-card__form {
+        max-width: 100%;
+        width: 100%;
+        display: block;
     }
 }
 </style>

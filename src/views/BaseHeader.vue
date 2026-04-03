@@ -16,12 +16,12 @@ function showUserSet() {
             <div class="header__block">
                 <div class="header__logo _show _light">
                     <a href="" target="_self"
-                        ><img src="../../public/assets/images/logo.png" alt="logo"
+                        ><img src="../../assets/images/logo.png" alt="logo"
                     /></a>
                 </div>
                 <div class="header__logo _dark">
                     <a href="" target="_self"
-                        ><img src="../../public/assets/images/logo_dark.png" alt="logo"
+                        ><img src="../../assets/images/logo_dark.png" alt="logo"
                     /></a>
                 </div>
                 <nav class="header__nav">
