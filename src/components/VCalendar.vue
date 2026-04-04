@@ -198,7 +198,11 @@ export default {
                 this.currentMonth = date.getMonth()
                 this.currentYear = date.getFullYear()
             }
+
             this.selectedDate = day.date
+            if (this.selectedDate < this.today) {
+                this.selectedDate = null
+            }
             this.$emit('pickDate', this.selectedDate)
         },
     },
