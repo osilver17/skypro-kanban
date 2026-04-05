@@ -46,14 +46,6 @@ function tasksDistributionByColumns(cardsStatus, tasksArr = []) {
     return arrsOfStatuses
 }
 
-provide('tasksData', {
-    tasks,
-    arrsOfStatuses,
-    cardsStatus,
-    updateTasks,
-    tasksDistributionByColumns,
-})
-
 const task = computed(() => {
     return (
         tasks.value.find((task) => task._id === id.value) || {
@@ -159,6 +151,14 @@ onMounted(() => {
     console.log('onMounted запущен')
     // Получаем задачи от сервера
     getTasks()
+})
+
+provide('tasksData', {
+    tasks,
+    arrsOfStatuses,
+    cardsStatus,
+    updateTasks,
+    tasksDistributionByColumns,
 })
 
 provide('getTasksProvide', getTasks)

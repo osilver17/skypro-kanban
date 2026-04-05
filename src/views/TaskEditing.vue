@@ -16,7 +16,7 @@ const router = useRouter()
 const route = useRoute()
 const id = computed(() => route.params.id)
 
-const cardsStatus = inject('cardsStatus')
+const cardsStatus = inject('tasksData')
 const getTasks = inject('getTasksProvide')
 const { userInfo } = inject('auth')
 const loading = ref(false)
