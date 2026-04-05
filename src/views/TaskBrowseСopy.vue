@@ -25,7 +25,7 @@ const task = computed(() => {
         topic: '',
         classColor: '',
         title: 'Задачи не существует',
-        date: null,
+        date: '2024-01-07T16:26:18.179Z',
         status: '',
         description: '',
     }
