@@ -10,13 +10,13 @@ import { useRoute, useRouter } from 'vue-router'
 import PreLoader from '@/components/PreLoader.vue'
 import { editTask } from '@/services/api.js'
 
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, provide, ref, watch } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
 const id = computed(() => route.params.id)
 
-const cardsStatus = inject('tasksData')
+const { cardsStatus } = inject('tasksData')
 const getTasks = inject('getTasksProvide')
 const { userInfo } = inject('auth')
 const loading = ref(false)
@@ -39,8 +39,7 @@ const task = computed(() => {
 })
 
 // Подключаем календарь
-import Datepicker from 'vue3-datepicker'
-import { ru } from 'date-fns/locale' // Импортируем русскую локаль
+import VCalendar from '@/components/VCalendar.vue'
 const selectedDate = ref(task.value.date)
 watch(selectedDate, () => {
     task.value.date = selectedDate.value
@@ -60,7 +59,7 @@ function editingCansell() {
     task.value.title = firsTitle.value
     task.value.status = firstStatus.value
     task.value.description = firstDescription.value
-    selectedDate.value = firstDate.value
+    task.value.date = firstDate.value
 }
 
 async function taskEditing(event) {
@@ -80,7 +79,7 @@ async function taskEditing(event) {
             {
                 title: task.value.title,
                 topic: task.value.topic,
-                status: task.value.status.toLowerCase(),
+                status: task.value.status,
                 description: task.value.description,
                 date: task.value.date.toISOString(),
             },
@@ -101,6 +100,12 @@ async function taskEditing(event) {
         loading.value = false
     }
 }
+
+function getDeadlineDate(date) {
+    selectedDate.value = date
+}
+provide('taskDate', task.value.date)
+provide('edit?', true)
 </script>
 
 <template>
@@ -135,17 +140,20 @@ async function taskEditing(event) {
                     <div class="pop-browse__status status">
                         <p class="status__p subttl">Статус</p>
                         <div class="status__themes">
-                            <div>
-                                <select v-model="selectedStatus" class="modal__input">
-                                    <option
-                                        v-for="(status, id) in cardsStatus"
-                                        :value="status"
-                                        :key="id"
-                                    >
-                                        {{ status }}
-                                    </option>
-                                </select>
-                            </div>
+                            <select
+                                v-model="task.status"
+                                class="modal__input"
+                                name="status"
+                                id="status"
+                            >
+                                <option
+                                    v-for="(status, id) in cardsStatus"
+                                    :value="status"
+                                    :key="id"
+                                >
+                                    {{ status }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="pop-browse__wrap">
@@ -162,60 +170,46 @@ async function taskEditing(event) {
                             </div>
                         </form>
                         <div class="pop-new-card__calendar calendar">
-                            <p class="calendar__ttl subttl">Дата исполнения</p>
-                            <div class="calendar__block">
-                                <Datepicker
-                                    v-model="selectedDate"
-                                    :lower-limit="new Date()"
-                                    :locale="ru"
-                                />
-
-                                <div class="calendar__period">
-                                    <p class="calendar__p date-end">
-                                        Срок исполнения:
-                                        <span class="date-control">{{
-                                            task.date.toLocaleString('ru-RU', dateOptions)
-                                        }}</span>
-                                    </p>
-                                </div>
+                            <VCalendar @pick-date="getDeadlineDate" :cancel-prop="task.date" />
+                            <div class="calendar__period">
+                                <p class="calendar__p date-end">
+                                    Срок исполнения:
+                                    <span class="date-control">{{
+                                        task.date.toLocaleString('ru-RU', dateOptions)
+                                    }}</span>
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="theme-down__categories theme-down">
-                        <p class="categories__p subttl">Категория</p>
-                        <div class="categories__theme _orange _active-category">
-                            <p class="_orange">Web Design</p>
-                        </div>
-                    </div>
-                    <div class="pop-browse__btn-browse _hide">
-                        <div class="btn-group">
-                            <button class="btn-browse__edit _btn-bor _hover03">
-                                <a href="#">Редактировать задачу</a>
-                            </button>
-                            <button class="btn-browse__delete _btn-bor _hover03">
-                                <a href="#" @click="taskDeleter">Удалить задачу</a>
-                            </button>
-                        </div>
-                        <button class="btn-browse__close _btn-bg _hover01">
-                            <RouterLink to="/">Закрыть</RouterLink>
+                </div>
+                <div class="pop-browse__btn-browse _hide">
+                    <div class="btn-group">
+                        <button class="btn-browse__edit _btn-bor _hover03">
+                            <a href="#">Редактировать задачу</a>
+                        </button>
+                        <button class="btn-browse__delete _btn-bor _hover03">
+                            <a href="#" @click="taskDeleter">Удалить задачу</a>
                         </button>
                     </div>
-                    <div class="pop-browse__btn-edit">
-                        <div class="btn-group">
-                            <button class="btn-edit__edit _btn-bg _hover01">
-                                <a href="#" @click="taskEditing">Сохранить</a>
-                            </button>
-                            <button class="btn-edit__edit _btn-bor _hover03">
-                                <a href="#" @click="editingCansell">Отменить</a>
-                            </button>
-                            <button class="btn-edit__delete _btn-bor _hover03" id="btnDelete">
-                                <a href="#" @click="taskDeleter">Удалить задачу</a>
-                            </button>
-                        </div>
-                        <button class="btn-edit__close _btn-bg _hover01">
-                            <RouterLink to="/">Закрыть</RouterLink>
+                    <button class="btn-browse__close _btn-bg _hover01">
+                        <RouterLink to="/">Закрыть</RouterLink>
+                    </button>
+                </div>
+                <div class="pop-browse__btn-edit">
+                    <div class="btn-group">
+                        <button class="btn-edit__edit _btn-bg _hover01">
+                            <a href="#" @click="taskEditing">Сохранить</a>
+                        </button>
+                        <button class="btn-edit__edit _btn-bor _hover03">
+                            <a href="#" @click="editingCansell">Отменить</a>
+                        </button>
+                        <button class="btn-edit__delete _btn-bor _hover03" id="btnDelete">
+                            <a href="#" @click="taskDeleter">Удалить задачу</a>
                         </button>
                     </div>
+                    <button class="btn-edit__close _btn-bg _hover01">
+                        <RouterLink to="/">Закрыть</RouterLink>
+                    </button>
                 </div>
             </div>
         </div>
@@ -223,13 +217,16 @@ async function taskEditing(event) {
 </template>
 
 <style scoped>
+.status_option::first-letter {
+    display: inline-block;
+    text-transform: uppercase;
+}
 .modal__input {
-    width: 100%;
-    min-width: 100%;
+    width: 50%;
     border-radius: 8px;
     border: 0.7px solid rgba(148, 166, 190, 0.4);
     outline: none;
-    padding: 10px 8px;
+    padding: 9px 6px;
 }
 .modal__input::-moz-placeholder {
     font-family: 'Roboto', sans-serif;
@@ -249,6 +246,7 @@ async function taskEditing(event) {
 }
 
 .modal_edit {
+    width: 100%;
     font-size: 20px;
     font-weight: 700;
     padding: 6px 8px;
@@ -285,7 +283,7 @@ async function taskEditing(event) {
     background-color: #ffffff;
     max-width: 630px;
     width: 100%;
-    padding: 40px 30px 38px;
+    padding: 37px 30px 38px;
     border-radius: 10px;
     border: 0.7px solid #d4dbe5;
     position: relative;
@@ -330,7 +328,7 @@ async function taskEditing(event) {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 .pop-browse__ttl {
     color: #000;
@@ -394,7 +392,7 @@ async function taskEditing(event) {
 }
 
 .status__p {
-    margin-bottom: 14px;
+    margin-bottom: 21px;
 }
 
 ._active-category {
@@ -456,9 +454,8 @@ async function taskEditing(event) {
 
 .calendar__p {
     color: #94a6be;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 1;
-    margin-top: 15px;
 }
 .calendar__p span {
     color: #000000;

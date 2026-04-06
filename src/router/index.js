@@ -25,7 +25,7 @@ const router = createRouter({
                         {
                             path: '/browse/:id', // Маршрут для окна просмотра задачи
                             name: 'browse-card',
-                            component: () => import('@/views/TaskBrowse.vue')
+                            component: () => import('@/views/TaskBrowseCopy.vue')
                         },
                         {
                             path: '/new-task', // Маршрут для окна новой задачи

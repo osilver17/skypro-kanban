@@ -53,21 +53,21 @@
             </div>
         </div>
         <input type="hidden" id="datepick_value" value="08.09.2023" />
-        <div class="calendar__period">
-            <p class="calendar__p date-end">
-                Выберите срок исполнения <span class="date-control"></span>.
-            </p>
-        </div>
     </div>
 </template>
 
 <script>
+import { inject } from 'vue'
+
 export default {
     name: 'VCalendar',
+    props: ['cancelProp'],
     emits: ['pickDate'],
     data() {
         const today = new Date()
         return {
+            dateSelected: inject('taskDate'),
+            isEditing: inject('edit?'),
             currentMonth: today.getMonth(), // Индекс месяца: 0 - январь
             currentYear: today.getFullYear(),
             selectedDate: null, // Хранит выбранную дату
@@ -89,12 +89,29 @@ export default {
             ],
         }
     },
+    mounted() {
+        this.selectedDate = this.dateSelected
+    },
+    watch: {
+        dateSelected() {
+            this.selectedDate = this.dateSelected
+        },
+        cancelProp(newValue) {
+            this.childAction(newValue)
+        },
+    },
+
     computed: {
         calendarDays() {
             return this.generateCalendar()
         },
     },
     methods: {
+        childAction(date) {
+            console.log('date =', date)
+
+            this.selectedDate = date
+        },
         // selectDate(day) {
         //     // ...
         //     this.selectedDate = day.date
@@ -198,12 +215,17 @@ export default {
                 this.currentMonth = date.getMonth()
                 this.currentYear = date.getFullYear()
             }
+            console.log('selectDate: this.dateSelected =', this.dateSelected)
 
-            this.selectedDate = day.date
-            if (this.selectedDate < this.today) {
-                this.selectedDate = null
+            if (this.isEditing) {
+                this.selectedDate = day.date
+                if (this.selectedDate < this.today) {
+                    this.selectedDate = null
+                }
+                this.$emit('pickDate', this.selectedDate)
+            } else {
+                this.selectedDate = this.dateSelected
             }
-            this.$emit('pickDate', this.selectedDate)
         },
     },
 }
@@ -319,7 +341,8 @@ export default {
     color: #fff;
 }
 
-.selected {
+.selected,
+.selected:hover {
     background-color: #94a6be;
     color: #ffffff;
 }

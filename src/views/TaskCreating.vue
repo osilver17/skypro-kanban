@@ -1,7 +1,7 @@
 <script setup>
 import PreLoader from '@/components/PreLoader.vue'
 import VCalendar from '@/components/VCalendar.vue'
-import { inject, ref, watch } from 'vue'
+import { inject, ref, watch, provide } from 'vue'
 import { createTask } from '@/services/api.js'
 import { useRouter } from 'vue-router'
 
@@ -36,7 +36,7 @@ const newTask = ref({
     title: '',
     description: '',
     topic: '',
-    status: 'без статуса',
+    status: 'Без статуса',
     date: null,
 })
 console.log('TaskCreating: newTask.value.date =', newTask.value.date)
@@ -141,6 +141,8 @@ function validateNewTask() {
 function getDeadlineDate(date) {
     selectedDate.value = date
 }
+provide('taskDate', null)
+provide('edit?', true)
 </script>
 
 <template>
@@ -182,6 +184,11 @@ function getDeadlineDate(date) {
 
                         <div class="pop-new-card__calendar calendar">
                             <VCalendar @pick-date="getDeadlineDate" />
+                            <div class="calendar__period">
+                                <p class="calendar__p date-end">
+                                    Выберите срок исполнения <span class="date-control"></span>.
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div class="pop-new-card__categories categories">

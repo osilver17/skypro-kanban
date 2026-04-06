@@ -15,7 +15,7 @@ const { loading } = inject('loading')
 const { error } = inject('loading')
 
 // Массив статусов задач
-const cardsStatus = ['без статуса', 'нужно сделать', 'в работе', 'тестирование', 'готово']
+const cardsStatus = ['Без статуса', 'Нужно сделать', 'В работе', 'Тестирование', 'Готово']
 
 // Массив для задач, не разбитых по статусам
 const tasks = ref([])
@@ -31,7 +31,7 @@ function updateTasks(tasksFromServ) {
 function tasksDistributionByColumns(cardsStatus, tasksArr = []) {
     const arrsOfStatuses = []
     cardsStatus.forEach((element, id) => {
-        arrsOfStatuses[id] = tasksArr.filter((item) => item.status.toLowerCase() === element)
+        arrsOfStatuses[id] = tasksArr.filter((item) => item.status === element)
         if (arrsOfStatuses[id].length === 0) {
             arrsOfStatuses[id].push({
                 _id: '0',
