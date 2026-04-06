@@ -97,7 +97,8 @@ export default {
             this.selectedDate = this.dateSelected
         },
         cancelProp(newValue) {
-            this.childAction(newValue)
+            this.selectedDate = newValue
+            // this.childAction(newValue)
         },
     },
 
@@ -220,7 +221,7 @@ export default {
             if (this.isEditing) {
                 this.selectedDate = day.date
                 if (this.selectedDate < this.today) {
-                    this.selectedDate = null
+                    this.selectedDate = this.today
                 }
                 this.$emit('pickDate', this.selectedDate)
             } else {

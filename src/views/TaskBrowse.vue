@@ -5,11 +5,12 @@ const dateOptions = {
     month: '2-digit',
     year: '2-digit',
 }
+import VCalendar from '@/components/VCalendar.vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const id = computed(() => route.params.id)
 
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, provide } from 'vue'
 import PreLoader from '@/components/PreLoader.vue'
 
 const loading = ref(false)
@@ -25,12 +26,15 @@ const task = computed(() => {
         topic: '',
         classColor: '',
         title: 'Задачи не существует',
-        date: null,
+        date: new Date(),
         status: '',
         description: '',
     }
     return seekedTask
 })
+
+provide('taskDate', task.value.date)
+provide('edit?', false)
 </script>
 
 <template>
@@ -75,16 +79,14 @@ const task = computed(() => {
                             </div>
                         </form>
                         <div class="pop-new-card__calendar calendar">
-                            <p class="calendar__ttl subttl">Deadline</p>
-                            <div class="calendar__block">
-                                <div class="calendar__period">
-                                    <p class="calendar__p date-end">
-                                        Срок исполнения:
-                                        <span class="date-control">{{
-                                            task.date.toLocaleString('ru-RU', dateOptions)
-                                        }}</span>
-                                    </p>
-                                </div>
+                            <VCalendar />
+                            <div class="calendar__period">
+                                <p class="calendar__p date-end">
+                                    Срок исполнения:
+                                    <span class="date-control">{{
+                                        task.date.toLocaleString('ru-RU', dateOptions)
+                                    }}</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -98,8 +100,8 @@ const task = computed(() => {
                         <div class="btn-group">
                             <button class="btn-browse__edit _btn-bor _hover03">
                                 <RouterLink :to="{ name: 'edit-card', params: { id } }"
-                                    >Редактировать задачу</RouterLink
-                                >
+                                    >Редактировать задачу
+                                </RouterLink>
                             </button>
                             <button class="btn-browse__delete _btn-bor _hover03">
                                 <a href="#" @click="taskDeleter">Удалить задачу</a>
@@ -349,9 +351,8 @@ const task = computed(() => {
 
 .calendar__p {
     color: #94a6be;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 1;
-    margin-top: 15px;
 }
 .calendar__p span {
     color: #000000;
