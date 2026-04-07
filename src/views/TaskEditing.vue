@@ -134,12 +134,12 @@ provide('edit?', true)
                             <div
                                 class="status__theme _btn"
                                 v-for="(status, id) in cardsStatus"
-                                :class="[{ '_active-status': status == statusItemText }]"
+                                :class="[{ '_active-status': status === statusItemText }]"
                                 :value="status"
                                 :key="id"
                                 @click="((statusItemText = status), (task.status = status))"
                             >
-                                <p :class="[{ '_active-status': status == statusItemText }]">
+                                <p :class="[{ '_active-status': status === statusItemText }]">
                                     {{ status }}
                                 </p>
                             </div>
