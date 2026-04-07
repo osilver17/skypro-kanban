@@ -1,52 +1,81 @@
 <script setup>
-import { ref } from 'vue'
-import { createTask } from '@/services/api.js'
 import PreLoader from '@/components/PreLoader.vue'
+import VCalendar from '@/components/VCalendar.vue'
+import { inject, ref, watch, provide } from 'vue'
+import { createTask } from '@/services/api.js'
 import { useRouter } from 'vue-router'
-import { cardsAllStatus } from '@/mocks/tasks'
+
+const dateOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+}
 
 const router = useRouter()
 
-const loading = ref(false)
-// ref(false) - флаг, показывающий, что идёт загрузка
+const addTaskCategory = inject('addTaskCategory')
+const { userInfo } = inject('auth')
 
-const classes = [
+const loading = ref(false)
+
+const categories = [
     {
         id: 1,
-        classType: '_orange',
+        categoryColor: '_orange',
         text: 'Web Design',
     },
     {
         id: 2,
-        classType: '_green',
+        categoryColor: '_green',
         text: 'Research',
     },
     {
         id: 3,
-        classType: '_purple',
+        categoryColor: '_purple',
         text: 'Copywriting',
     },
 ]
+const { tasks, arrsOfStatuses, cardsStatus, updateTasks, tasksDistributionByColumns } =
+    inject('tasksData')
 
-const taskData = ref({
+const newTask = ref({
     title: '',
     description: '',
     topic: '',
+    status: 'Без статуса',
+    date: null,
 })
-const error = ref('')
-// ref('') - строка для текста ошибки
+console.log('TaskCreating: newTask.value.date =', newTask.value.date)
+
+const newTaskErrors = ref({
+    title: '',
+    description: '',
+    topic: '',
+    status: '',
+    date: null,
+})
+
+const taskError = ref('')
 
 const categoryItemText = ref('')
 
+const selectedDate = ref(null)
+watch(selectedDate, () => {
+    newTask.value.date = selectedDate.value
+    console.log('!!!!!TaskCreating: selectedDate =', selectedDate.value)
+    console.log('!!!!!TaskCreating: newTask.value.date =', newTask.value.date)
+})
+
 async function createNewTask(event) {
     event.preventDefault()
-
+    // Валидация формы перед отправкой
+    if (!validateNewTask()) {
+        return
+    }
     try {
         loading.value = true
-        const stringUserInfo = localStorage.getItem('userInfo')
-        const userInfo = JSON.parse(stringUserInfo)
-        const token = userInfo.token
-        console.log('taskData.value.topic =', taskData.value.topic)
+        userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
+        const token = userInfo.value.token
 
         const data = await createTask(
             {
@@ -54,25 +83,86 @@ async function createNewTask(event) {
             },
 
             {
-                title: taskData.value.title,
-                description: taskData.value.description,
-                topic: taskData.value.topic,
+                title: newTask.value.title,
+                topic: newTask.value.topic,
+                description: newTask.value.description,
+                status: newTask.value.status,
+                date: newTask.value.date.toISOString(),
             },
         )
         if (data) {
-            console.log('data =', data.tasks)
-            cardsAllStatus.length = 0
-            cardsAllStatus.push(...data.tasks)
-
+            addTaskCategory(data.tasks)
+            // console.log('!!!!!!!!! TC до апдейта: tasks.value =', tasks.value)
+            updateTasks(data.tasks)
+            // console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
+            arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
             router.push('/')
         }
     } catch (err) {
-        error.value = err.message
-        alert(error.value)
+        taskError.value = err
+        alert(taskError.value)
     } finally {
         loading.value = false
     }
 }
+
+function validateNewTask() {
+    console.log('newTask.value.date =', newTask.value.date)
+
+    let isValid = true
+    taskError.value = ''
+    // Сбросим все ошибки
+    newTaskErrors.value.title = false
+    newTaskErrors.value.description = false
+    newTaskErrors.value.topic = false
+    newTaskErrors.value.date = false
+    // Проверка категории задачи
+    if (!newTask.value.topic.trim()) {
+        newTaskErrors.value.topic = true
+        taskError.value = 'Пожалуйста, выберите категорию'
+        isValid = false
+    }
+    // Проверка описания
+    if (!newTask.value.description.trim()) {
+        newTaskErrors.value.description = true
+        taskError.value = 'Пожалуйста, введите описание задачи'
+        isValid = false
+    }
+    // Проверка имени задачи
+    if (!newTask.value.title.trim()) {
+        newTaskErrors.value.title = true
+        taskError.value = 'Пожалуйста, введите название задачи'
+        isValid = false
+    }
+    // Проверка даты выполнения задачи
+    if (!newTask.value.date) {
+        newTaskErrors.value.date = true
+        taskError.value = 'Пожалуйста, выберите дату выполнения задачи'
+        isValid = false
+    }
+
+    return isValid
+}
+
+function getDeadlineDate(date) {
+    selectedDate.value = date
+}
+
+function showDate() {
+    if (!(newTask.value.date === null)) {
+        return newTask.value.date.toLocaleString('ru-RU', dateOptions)
+    }
+    return
+}
+
+function showString() {
+    if (!(newTask.value.date === null)) {
+        return 'Срок исполнения:'
+    }
+    return 'Выберите срок исполнения'
+}
+provide('taskDate', null)
+provide('edit?', true)
 </script>
 
 <template>
@@ -82,6 +172,9 @@ async function createNewTask(event) {
             <div class="pop-new-card__block">
                 <div class="pop-new-card__content">
                     <h3 class="pop-new-card__ttl">Создание задачи</h3>
+                    <div v-if="taskError" class="modal__form-error">
+                        <p>{{ taskError }}</p>
+                    </div>
                     <RouterLink to="/" class="pop-new-card__close">&#10006;</RouterLink>
                     <div class="pop-new-card__wrap">
                         <form class="pop-new-card__form form-new" id="formNewCard" action="#">
@@ -93,7 +186,7 @@ async function createNewTask(event) {
                                     name="name"
                                     id="formTitle"
                                     placeholder="Введите название задачи..."
-                                    v-model="taskData.title"
+                                    v-model="newTask.title"
                                     autofocus
                                 />
                             </div>
@@ -104,98 +197,18 @@ async function createNewTask(event) {
                                     name="text"
                                     id="textArea"
                                     placeholder="Введите описание задачи..."
-                                    v-model="taskData.description"
+                                    v-model="newTask.description"
                                 ></textarea>
                             </div>
                         </form>
-                        <div class="pop-new-card__calendar calendar">
-                            <p class="calendar__ttl subttl">Даты</p>
-                            <div class="calendar__block">
-                                <div class="calendar__nav">
-                                    <div class="calendar__month">Сентябрь 2023</div>
-                                    <div class="nav__actions">
-                                        <div class="nav__action" data-action="prev">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="6"
-                                                height="11"
-                                                viewBox="0 0 6 11"
-                                            >
-                                                <path
-                                                    d="M5.72945 1.95273C6.09018 1.62041 6.09018 1.0833 5.72945 0.750969C5.36622 0.416344 4.7754 0.416344 4.41218 0.750969L0.528487 4.32883C-0.176162 4.97799 -0.176162 6.02201 0.528487 6.67117L4.41217 10.249C4.7754 10.5837 5.36622 10.5837 5.72945 10.249C6.09018 9.9167 6.09018 9.37959 5.72945 9.04727L1.87897 5.5L5.72945 1.95273Z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <div class="nav__action" data-action="next">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="6"
-                                                height="11"
-                                                viewBox="0 0 6 11"
-                                            >
-                                                <path
-                                                    d="M0.27055 9.04727C-0.0901833 9.37959 -0.0901832 9.9167 0.27055 10.249C0.633779 10.5837 1.2246 10.5837 1.58783 10.249L5.47151 6.67117C6.17616 6.02201 6.17616 4.97799 5.47151 4.32883L1.58782 0.75097C1.2246 0.416344 0.633778 0.416344 0.270549 0.75097C-0.0901831 1.0833 -0.090184 1.62041 0.270549 1.95273L4.12103 5.5L0.27055 9.04727Z"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="calendar__content">
-                                    <div class="calendar__days-names">
-                                        <div class="calendar__day-name">пн</div>
-                                        <div class="calendar__day-name">вт</div>
-                                        <div class="calendar__day-name">ср</div>
-                                        <div class="calendar__day-name">чт</div>
-                                        <div class="calendar__day-name">пт</div>
-                                        <div class="calendar__day-name -weekend-">сб</div>
-                                        <div class="calendar__day-name -weekend-">вс</div>
-                                    </div>
-                                    <div class="calendar__cells">
-                                        <div class="calendar__cell _other-month">28</div>
-                                        <div class="calendar__cell _other-month">29</div>
-                                        <div class="calendar__cell _other-month">30</div>
-                                        <div class="calendar__cell _cell-day">31</div>
-                                        <div class="calendar__cell _cell-day">1</div>
-                                        <div class="calendar__cell _cell-day _weekend">2</div>
-                                        <div class="calendar__cell _cell-day _weekend">3</div>
-                                        <div class="calendar__cell _cell-day">4</div>
-                                        <div class="calendar__cell _cell-day">5</div>
-                                        <div class="calendar__cell _cell-day">6</div>
-                                        <div class="calendar__cell _cell-day">7</div>
-                                        <div class="calendar__cell _cell-day _current">8</div>
-                                        <div class="calendar__cell _cell-day _weekend">9</div>
-                                        <div class="calendar__cell _cell-day _weekend">10</div>
-                                        <div class="calendar__cell _cell-day">11</div>
-                                        <div class="calendar__cell _cell-day">12</div>
-                                        <div class="calendar__cell _cell-day">13</div>
-                                        <div class="calendar__cell _cell-day">14</div>
-                                        <div class="calendar__cell _cell-day">15</div>
-                                        <div class="calendar__cell _cell-day _weekend">16</div>
-                                        <div class="calendar__cell _cell-day _weekend">17</div>
-                                        <div class="calendar__cell _cell-day">18</div>
-                                        <div class="calendar__cell _cell-day">19</div>
-                                        <div class="calendar__cell _cell-day">20</div>
-                                        <div class="calendar__cell _cell-day">21</div>
-                                        <div class="calendar__cell _cell-day">22</div>
-                                        <div class="calendar__cell _cell-day _weekend">23</div>
-                                        <div class="calendar__cell _cell-day _weekend">24</div>
-                                        <div class="calendar__cell _cell-day">25</div>
-                                        <div class="calendar__cell _cell-day">26</div>
-                                        <div class="calendar__cell _cell-day">27</div>
-                                        <div class="calendar__cell _cell-day">28</div>
-                                        <div class="calendar__cell _cell-day">29</div>
-                                        <div class="calendar__cell _cell-day _weekend">30</div>
-                                        <div class="calendar__cell _other-month _weekend">1</div>
-                                    </div>
-                                </div>
 
-                                <input type="hidden" id="datepick_value" value="08.09.2023" />
-                                <div class="calendar__period">
-                                    <p class="calendar__p date-end">
-                                        Выберите срок исполнения
-                                        <span class="date-control"></span>.
-                                    </p>
-                                </div>
+                        <div class="pop-new-card__calendar calendar">
+                            <VCalendar @pick-date="getDeadlineDate" />
+                            <div class="calendar__period">
+                                <p class="calendar__p date-end">
+                                    {{ showString() }}
+                                    <span class="date-control">{{ showDate() }}</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -203,30 +216,20 @@ async function createNewTask(event) {
                         <p class="categories__p subttl">Категория</p>
                         <div class="categories__themes">
                             <div
-                                v-for="(classItem, index) in classes"
+                                v-for="(category, index) in categories"
                                 :key="index"
                                 class="categories__theme"
                                 :class="[
-                                    classItem.classType,
-                                    { '_active-category': classItem.text == categoryItemText },
+                                    category.categoryColor,
+                                    { '_active-category': category.text == categoryItemText },
                                 ]"
                                 @click="
-                                    ((categoryItemText = classItem.text),
-                                    (taskData.topic = classItem.text))
+                                    ((categoryItemText = category.text),
+                                    (newTask.topic = category.text))
                                 "
                             >
-                                <p :class="classItem.classType">{{ classItem.text }}</p>
+                                <p :class="category.categoryColor">{{ category.text }}</p>
                             </div>
-                            <!-- <div
-                                class="categories__theme _green"
-                                :class="{ '_active-category': isActive, disabled: isDisabled }"
-                                @click="handleClick"
-                            >
-                                <p class="_green">Research</p>
-                            </div>
-                            <div class="categories__theme _purple" @click="handleClick">
-                                <p class="_purple">Copywriting</p>
-                            </div> -->
                         </div>
                     </div>
                     <button class="form-new__create _hover01" id="btnCreate" @click="createNewTask">
@@ -239,6 +242,54 @@ async function createNewTask(event) {
 </template>
 
 <style scoped>
+.modal__input {
+    width: 100%;
+    min-width: 100%;
+    border-radius: 8px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    outline: none;
+    padding: 10px 8px;
+}
+.modal__input::-moz-placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: -0.28px;
+    color: #94a6be;
+}
+.modal__input::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: -0.28px;
+    color: #94a6be;
+}
+
+.calendar__wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.local-wrapper {
+    margin-top: 80px;
+}
+
+select {
+    width: 100%;
+    max-width: 300px;
+}
+.modal__form-error p {
+    text-align: start;
+    margin-bottom: 19px;
+    color: rgb(248, 4, 4);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.14px;
+}
 .pop-new-card {
     width: 100%;
     min-width: 375px;
@@ -307,23 +358,6 @@ async function createNewTask(event) {
     width: 100%;
     display: block;
     margin-bottom: 20px;
-}
-
-.pop-new-card__container {
-    padding: 0;
-    justify-content: flex-start;
-}
-.pop-new-card__block {
-    padding: 20px 16px 32px;
-}
-.pop-new-card__form {
-    max-width: 100%;
-    width: 100%;
-    display: block;
-}
-
-.pop-new-card__calendar {
-    width: 100%;
 }
 
 .form-new__block {
@@ -451,13 +485,13 @@ async function createNewTask(event) {
     margin-bottom: 20px;
 }
 .calendar__ttl {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     padding: 0 7px;
 }
 
 .calendar__p {
     color: #94a6be;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1;
 }
 .calendar__p span {
@@ -522,7 +556,7 @@ async function createNewTask(event) {
 
 .calendar__p {
     color: #94a6be;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1;
 }
 
@@ -531,12 +565,8 @@ async function createNewTask(event) {
 }
 
 .calendar__period {
+    margin-top: 10px;
     padding: 0 7px;
-}
-
-._cell-day:hover {
-    color: #94a6be;
-    background-color: #eaeef6;
 }
 
 ._current {
@@ -611,6 +641,7 @@ async function createNewTask(event) {
     }
     .pop-new-card__wrap {
         display: block;
+        align-items: center;
     }
 }
 
@@ -628,6 +659,14 @@ async function createNewTask(event) {
     .form-new__create {
         width: 100%;
         height: 40px;
+    }
+    .pop-new-card__block {
+        padding: 20px 16px 32px;
+    }
+    .pop-new-card__form {
+        max-width: 100%;
+        width: 100%;
+        display: block;
     }
 }
 </style>

@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { signUp } from '@/services/authAPI'
+import PreLoader from '@/components/PreLoader.vue'
+
+const { setUser } = inject('auth')
+const { loading } = inject('loading')
 
 const router = useRouter()
 
@@ -42,7 +46,8 @@ function validateForm() {
     }
     // Если есть ошибки, установим общее сообщение
     if (!isValid) {
-        error.value = 'Пожалуйста, заполните все обязательные поля'
+        error.value =
+            'Введенные Вами данные некорректны. Чтобы завершить регистрацию, заполните все поля в форме.'
     }
     return isValid
 }
@@ -56,22 +61,33 @@ async function handleSignUp(event) {
         return
     }
     try {
+        loading.value = true
         const data = await signUp(formData.value)
         if (data) {
-            console.log('data =', data)
-
-            localStorage.setItem('userInfo', JSON.stringify(data))
+            console.log('data in signUp =', data)
+            setUser(data)
             router.push('/')
         }
     } catch (err) {
         error.value = err.message
         console.log('error.value в catch =', error.value)
+    } finally {
+        loading.value = false
     }
+}
+
+function errorClear() {
+    error.value = ''
+    // Сбросим все ошибки
+    errors.value.name = false
+    errors.value.login = false
+    errors.value.password = false
 }
 </script>
 
 <template>
-    <div class="wrapper">
+    <PreLoader v-if="loading" />
+    <div v-else class="wrapper">
         <div class="container-signup">
             <div class="modal">
                 <div class="modal__block">
@@ -80,37 +96,52 @@ async function handleSignUp(event) {
                     </div>
                     <form class="modal__form-login" id="formLogUp" action="#">
                         <input
-                            class="modal__input first-name"
+                            class="modal__input"
+                            :class="[{ 'input-error': errors.name }]"
                             type="text"
                             name="first-name"
                             autocomplete="username"
                             id="first-name"
                             placeholder="Имя"
                             v-model="formData.name"
+                            :onfocus="errorClear"
                         />
                         <input
                             class="modal__input login"
-                            type="text"
-                            name="login"
+                            :class="[{ 'input-error': errors.login }]"
+                            type="email"
                             autocomplete="email"
+                            name="login"
                             id="loginReg"
                             placeholder="Эл. почта"
                             v-model="formData.login"
+                            :onfocus="errorClear"
                         />
                         <input
                             class="modal__input password-first"
+                            :class="[{ 'input-error': errors.password }]"
                             type="password"
                             autocomplete="new-password"
                             name="password"
                             id="passwordFirst"
                             placeholder="Пароль"
                             v-model="formData.password"
+                            :onfocus="errorClear"
                         />
                         <div v-if="error" class="modal__form-error">
                             <p>{{ error }}</p>
                         </div>
-                        <button class="modal__btn-signup-ent _hover01" id="SignUpEnter">
-                            <a href="#" @click="handleSignUp">Зарегистрироваться</a>
+                        <button
+                            class="modal__btn-signup-ent"
+                            :disabled="error !== ''"
+                            :class="[
+                                { 'modal__btn-signup-ent--error': error !== '' },
+                                { _hover01: error === '' },
+                            ]"
+                            id="SignUpEnter"
+                            @click="handleSignUp"
+                        >
+                            Зарегистрироваться
                         </button>
                         <div class="modal__form-group">
                             <p>
@@ -208,6 +239,9 @@ async function handleSignUp(event) {
     letter-spacing: -0.28px;
     color: #94a6be;
 }
+.input-error {
+    border: 0.7px solid rgba(252, 3, 3, 0.4);
+}
 .modal__btn-signup-ent {
     width: 100%;
     height: 30px;
@@ -234,6 +268,9 @@ async function handleSignUp(event) {
     align-items: center;
     justify-content: center;
 }
+.modal__btn-signup-ent--error {
+    background-color: rgba(148, 166, 190, 0.4);
+}
 .modal__form-group {
     text-align: center;
 }
@@ -253,7 +290,7 @@ async function handleSignUp(event) {
     text-align: center;
     margin-top: 12px;
     color: rgb(248, 4, 4);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 150%;
     letter-spacing: -0.14px;

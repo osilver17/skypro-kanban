@@ -1,11 +1,14 @@
 <script setup>
 import { RouterLink, useRouter } from 'vue-router'
+import { inject } from 'vue'
+
+const { removeUser } = inject('auth')
 
 const router = useRouter()
 
 function logout(e) {
     e.preventDefault() // Блокируем стандартное действие ссылки
-    localStorage.removeItem('userInfo') // Удаляем информацию о пользователе
+    removeUser() // Удаляем информацию о пользователе
     router.push('/sign-in') // Отправляем на экран входа
 }
 </script>

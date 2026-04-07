@@ -1,10 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import UserSet from '@/views/UserSet.vue'
+import { inject } from 'vue'
+const { userInfo } = inject('auth')
 
 const isVisible = ref('false')
 function showUserSet() {
     isVisible.value = !isVisible.value
+}
+
+function showUserName() {
+    if (!(userInfo.value === null)) {
+        return userInfo.value.name
+    }
+    return
 }
 </script>
 
@@ -14,19 +23,21 @@ function showUserSet() {
             <div class="header__block">
                 <div class="header__logo _show _light">
                     <a href="" target="_self"
-                        ><img src="../../public/assets/images/logo.png" alt="logo"
+                        ><img src="../../assets/images/logo.png" alt="logo"
                     /></a>
                 </div>
                 <div class="header__logo _dark">
                     <a href="" target="_self"
-                        ><img src="../../public/assets/images/logo_dark.png" alt="logo"
+                        ><img src="../../assets/images/logo_dark.png" alt="logo"
                     /></a>
                 </div>
                 <nav class="header__nav">
                     <button class="header__btn-main-new _hover01" id="btnMainNew">
                         <RouterLink to="/new-task">Создать новую задачу</RouterLink>
                     </button>
-                    <a href="#" class="header__user _hover02" @click="showUserSet">Ivan Ivanov</a>
+                    <a href="#" class="header__user _hover02" @click="showUserSet">{{
+                        showUserName()
+                    }}</a>
                     <UserSet v-show="!isVisible" />
                 </nav>
             </div>

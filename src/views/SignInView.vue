@@ -1,7 +1,11 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { signIn } from '@/services/authAPI'
+import PreLoader from '@/components/PreLoader.vue'
+
+const { setUser } = inject('auth')
+const { loading } = inject('loading')
 
 const router = useRouter() // Инициализация роутера
 
@@ -48,22 +52,37 @@ async function handleSignIn(e) {
         return
     }
     try {
+        loading.value = true
         const data = await signIn({
             login: formData.value.login,
             password: formData.value.password,
         })
         if (data) {
-            localStorage.setItem('userInfo', JSON.stringify(data))
+            console.log('data in signIn =', data)
+            setUser(data)
             router.push('/')
         }
     } catch (err) {
-        error.value = err.message
+        console.log('SignInView: err = ', err)
+        if (err.message === 'Request failed with status code 400') {
+            error.value =
+                'Введенные Вами данные не распознаны. Проверьте свой логин и пароль и повторите попытку входа'
+        } else {
+            error.value = err.message
+        }
+    } finally {
+        loading.value = false
     }
+}
+
+function errorClear() {
+    error.value = ''
 }
 </script>
 
 <template>
-    <div class="wrapper">
+    <PreLoader v-if="loading" />
+    <div v-else class="wrapper">
         <div class="container-signin">
             <div class="modal">
                 <div class="modal__block">
@@ -73,27 +92,40 @@ async function handleSignIn(e) {
                     <form class="modal__form-login" id="formLogIn" action="#">
                         <input
                             class="modal__input"
-                            type="text"
+                            :class="[{ 'modal__input--error': error !== '' }]"
+                            type="email"
                             autocomplete="email"
                             name="login"
                             id="formlogin"
                             placeholder="Эл. почта"
                             v-model="formData.login"
+                            :onfocus="errorClear"
                         />
                         <input
                             class="modal__input"
+                            :class="[{ 'modal__input--error': error !== '' }]"
                             type="password"
-                            name="password"
                             autocomplete="current-password"
+                            name="password"
                             id="formpassword"
                             placeholder="Пароль"
                             v-model="formData.password"
+                            :onfocus="errorClear"
                         />
                         <div v-if="error" class="modal__form-error">
                             <p>{{ error }}</p>
                         </div>
-                        <button class="modal__btn-enter _hover01" id="btnEnter">
-                            <a href="#" :onClick="handleSignIn">Войти</a>
+                        <button
+                            class="modal__btn-enter"
+                            :disabled="error !== ''"
+                            :class="[
+                                { 'modal__btn-enter--error': error !== '' },
+                                { _hover01: error === '' },
+                            ]"
+                            id="btnEnter"
+                            :onClick="handleSignIn"
+                        >
+                            Войти
                         </button>
                         <div class="modal__form-group">
                             <p>Нужно зарегистрироваться?</p>
@@ -165,6 +197,7 @@ async function handleSignIn(e) {
 .modal__form-login input:first-child {
     margin-bottom: 7px;
 }
+
 .modal__input {
     width: 100%;
     min-width: 100%;
@@ -173,6 +206,16 @@ async function handleSignIn(e) {
     outline: none;
     padding: 10px 8px;
 }
+
+.modal__input--error {
+    width: 100%;
+    min-width: 100%;
+    border-radius: 8px;
+    border: 0.7px solid rgb(248, 4, 4);
+    outline: none;
+    padding: 10px 8px;
+}
+
 .modal__input::-moz-placeholder {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
@@ -215,6 +258,9 @@ async function handleSignIn(e) {
     align-items: center;
     justify-content: center;
 }
+.modal__btn-enter--error {
+    background-color: rgba(148, 166, 190, 0.4);
+}
 .modal__form-group {
     text-align: center;
 }
@@ -234,7 +280,7 @@ async function handleSignIn(e) {
     text-align: center;
     margin-top: 19px;
     color: rgb(248, 4, 4);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 150%;
     letter-spacing: -0.14px;
