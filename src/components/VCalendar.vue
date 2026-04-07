@@ -338,8 +338,7 @@ export default {
 }
 
 .today {
-    background: #31aef7;
-    color: #fff;
+    font-weight: bold;
 }
 
 .selected,

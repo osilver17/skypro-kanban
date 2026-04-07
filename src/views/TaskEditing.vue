@@ -16,12 +16,12 @@ const router = useRouter()
 const route = useRoute()
 const id = computed(() => route.params.id)
 
-const { cardsStatus } = inject('tasksData')
-const getTasks = inject('getTasksProvide')
 const { userInfo } = inject('auth')
 const loading = ref(false)
 const error = ref('')
-const { tasks } = inject('tasksData')
+const addTaskCategory = inject('addTaskCategory')
+const { tasks, arrsOfStatuses, cardsStatus, updateTasks, tasksDistributionByColumns } =
+    inject('tasksData')
 const taskDeleter = inject('taskDeleter')
 
 const task = computed(() => {
@@ -38,6 +38,8 @@ const task = computed(() => {
     return seekedTask
 })
 
+const statusItemText = ref(task.value.status)
+
 // Подключаем календарь
 import VCalendar from '@/components/VCalendar.vue'
 const selectedDate = ref(task.value.date)
@@ -51,13 +53,12 @@ watch(selectedStatus, () => {
 })
 
 // Отмена редактирования
-const firsTitle = ref(task.value.title)
 const firstStatus = ref(task.value.status)
 const firstDescription = ref(task.value.description)
 const firstDate = ref(task.value.date)
 function editingCansell() {
-    task.value.title = firsTitle.value
     task.value.status = firstStatus.value
+    statusItemText.value = task.value.status
     task.value.description = firstDescription.value
     task.value.date = firstDate.value
 }
@@ -87,10 +88,10 @@ async function taskEditing(event) {
             task.value._id,
         )
         if (data) {
-            tasks.value.length = 0
-            tasks.value.push(...data.tasks)
-            console.log('tasks.value =', tasks.value)
-            await getTasks()
+            addTaskCategory(data.tasks)
+            updateTasks(data.tasks)
+            console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
+            arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
             router.push('/')
         }
     } catch (err) {
@@ -115,17 +116,7 @@ provide('edit?', true)
             <div class="pop-browse__block">
                 <div class="pop-browse__content">
                     <div class="pop-browse__top-block">
-                        <div class="pop-browse__ttl">
-                            <input
-                                class="modal__input modal_edit"
-                                type="text"
-                                autocomplete="text"
-                                name="status"
-                                id="formStatus"
-                                :placeholder="task.title"
-                                v-model="task.title"
-                            />
-                        </div>
+                        <h3 class="pop-browse__ttl">{{ task.title }}</h3>
                         <div
                             :class="[
                                 'categories__theme',
@@ -140,20 +131,18 @@ provide('edit?', true)
                     <div class="pop-browse__status status">
                         <p class="status__p subttl">Статус</p>
                         <div class="status__themes">
-                            <select
-                                v-model="task.status"
-                                class="modal__input"
-                                name="status"
-                                id="status"
+                            <div
+                                class="status__theme _btn"
+                                v-for="(status, id) in cardsStatus"
+                                :class="[{ '_active-status': status == statusItemText }]"
+                                :value="status"
+                                :key="id"
+                                @click="((statusItemText = status), (task.status = status))"
                             >
-                                <option
-                                    v-for="(status, id) in cardsStatus"
-                                    :value="status"
-                                    :key="id"
-                                >
+                                <p :class="[{ '_active-status': status == statusItemText }]">
                                     {{ status }}
-                                </option>
-                            </select>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div class="pop-browse__wrap">
@@ -283,7 +272,7 @@ provide('edit?', true)
     background-color: #ffffff;
     max-width: 630px;
     width: 100%;
-    padding: 37px 30px 38px;
+    padding: 40px 30px 38px;
     border-radius: 10px;
     border: 0.7px solid #d4dbe5;
     position: relative;
@@ -328,7 +317,7 @@ provide('edit?', true)
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 .pop-browse__ttl {
     color: #000;
@@ -384,15 +373,35 @@ provide('edit?', true)
     margin-bottom: 11px;
 }
 
+._active-status {
+    background: #94a6be;
+    color: #ffffff;
+}
+
+.status__theme {
+    border-radius: 24px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    color: #94a6be;
+    padding: 11px 14px 10px;
+    margin-right: 7px;
+    margin-bottom: 7px;
+}
+.status__theme p {
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: -0.14px;
+}
+
 .status__themes {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
+    gap: 4px;
 }
 
 .status__p {
-    margin-bottom: 21px;
+    margin-bottom: 14px;
 }
 
 ._active-category {

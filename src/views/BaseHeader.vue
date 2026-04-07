@@ -8,6 +8,13 @@ const isVisible = ref('false')
 function showUserSet() {
     isVisible.value = !isVisible.value
 }
+
+function showUserName() {
+    if (!(userInfo.value === null)) {
+        return userInfo.value.name
+    }
+    return
+}
 </script>
 
 <template>
@@ -29,7 +36,7 @@ function showUserSet() {
                         <RouterLink to="/new-task">Создать новую задачу</RouterLink>
                     </button>
                     <a href="#" class="header__user _hover02" @click="showUserSet">{{
-                        userInfo.name
+                        showUserName()
                     }}</a>
                     <UserSet v-show="!isVisible" />
                 </nav>

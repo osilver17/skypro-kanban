@@ -5,6 +5,12 @@ import { inject, ref, watch, provide } from 'vue'
 import { createTask } from '@/services/api.js'
 import { useRouter } from 'vue-router'
 
+const dateOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+}
+
 const router = useRouter()
 
 const addTaskCategory = inject('addTaskCategory')
@@ -12,20 +18,20 @@ const { userInfo } = inject('auth')
 
 const loading = ref(false)
 
-const classes = [
+const categories = [
     {
         id: 1,
-        classType: '_orange',
+        categoryColor: '_orange',
         text: 'Web Design',
     },
     {
         id: 2,
-        classType: '_green',
+        categoryColor: '_green',
         text: 'Research',
     },
     {
         id: 3,
-        classType: '_purple',
+        categoryColor: '_purple',
         text: 'Copywriting',
     },
 ]
@@ -86,9 +92,9 @@ async function createNewTask(event) {
         )
         if (data) {
             addTaskCategory(data.tasks)
-            console.log('!!!!!!!!! TC до апдейта: tasks.value =', tasks.value)
+            // console.log('!!!!!!!!! TC до апдейта: tasks.value =', tasks.value)
             updateTasks(data.tasks)
-            console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
+            // console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
             arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
             router.push('/')
         }
@@ -141,6 +147,20 @@ function validateNewTask() {
 function getDeadlineDate(date) {
     selectedDate.value = date
 }
+
+function showDate() {
+    if (!(newTask.value.date === null)) {
+        return newTask.value.date.toLocaleString('ru-RU', dateOptions)
+    }
+    return
+}
+
+function showString() {
+    if (!(newTask.value.date === null)) {
+        return 'Срок исполнения:'
+    }
+    return 'Выберите срок исполнения'
+}
 provide('taskDate', null)
 provide('edit?', true)
 </script>
@@ -186,7 +206,8 @@ provide('edit?', true)
                             <VCalendar @pick-date="getDeadlineDate" />
                             <div class="calendar__period">
                                 <p class="calendar__p date-end">
-                                    Выберите срок исполнения <span class="date-control"></span>.
+                                    {{ showString() }}
+                                    <span class="date-control">{{ showDate() }}</span>
                                 </p>
                             </div>
                         </div>
@@ -195,19 +216,19 @@ provide('edit?', true)
                         <p class="categories__p subttl">Категория</p>
                         <div class="categories__themes">
                             <div
-                                v-for="(classItem, index) in classes"
+                                v-for="(category, index) in categories"
                                 :key="index"
                                 class="categories__theme"
                                 :class="[
-                                    classItem.classType,
-                                    { '_active-category': classItem.text == categoryItemText },
+                                    category.categoryColor,
+                                    { '_active-category': category.text == categoryItemText },
                                 ]"
                                 @click="
-                                    ((categoryItemText = classItem.text),
-                                    (newTask.topic = classItem.text))
+                                    ((categoryItemText = category.text),
+                                    (newTask.topic = category.text))
                                 "
                             >
-                                <p :class="classItem.classType">{{ classItem.text }}</p>
+                                <p :class="category.categoryColor">{{ category.text }}</p>
                             </div>
                         </div>
                     </div>
