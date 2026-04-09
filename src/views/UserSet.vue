@@ -14,7 +14,7 @@ function toggleTheme() {
         document.getElementsByTagName('html')[0].style.color = '#000000'
         document.body.style.color = '#000000'
     }
-    console.log('toggleTheme: isDark.value =', isDark.value)
+    console.log('UserSet: toggleTheme: isDark.value =', isDark.value)
 }
 
 function showUserName() {

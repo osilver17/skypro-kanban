@@ -1,7 +1,7 @@
 <script setup>
 import PreLoader from '@/components/PreLoader.vue'
 import VCalendar from '@/components/VCalendar.vue'
-import { inject, ref, watch, provide } from 'vue'
+import { inject, ref, watch, provide, onBeforeMount } from 'vue'
 import { createTask } from '@/services/api.js'
 import { useRouter } from 'vue-router'
 
@@ -22,20 +22,41 @@ const loading = ref(false)
 const categories = [
     {
         id: 1,
-        categoryColor: '_orange',
+        categoryClassColor: '_orange',
         text: 'Web Design',
     },
     {
         id: 2,
-        categoryColor: '_green',
+        categoryClassColor: '_green',
         text: 'Research',
     },
     {
         id: 3,
-        categoryColor: '_purple',
+        categoryClassColor: '_purple',
         text: 'Copywriting',
     },
 ]
+
+// Функция, меняющая поля для отрисовки категорий задач в зависимости от темы
+function changeClassColor(categories, isDarkTheme) {
+    console.log('changeClassColor: isDarkTheme =', isDarkTheme)
+
+    categories.forEach((item) => {
+        switch (item.text) {
+            case 'Web Design':
+                item.categoryClassColor = isDarkTheme ? '_orange-dark' : '_orange'
+                break
+            case 'Research':
+                item.categoryClassColor = isDarkTheme ? '_green-dark' : '_green'
+                break
+            case 'Copywriting':
+                item.categoryClassColor = isDarkTheme ? '_purple-dark' : '_purple'
+                break
+            default:
+                break
+        }
+    })
+}
 const { tasks, arrsOfStatuses, cardsStatus, updateTasks, tasksDistributionByColumns } =
     inject('tasksData')
 
@@ -162,6 +183,10 @@ function showString() {
     }
     return 'Выберите срок исполнения'
 }
+onBeforeMount(() => {
+    console.log('onBeforeMount')
+    changeClassColor(categories, isDark.value)
+})
 provide('taskDate', null)
 provide('edit?', true)
 </script>
@@ -221,7 +246,7 @@ provide('edit?', true)
                                 :key="index"
                                 class="categories__theme"
                                 :class="[
-                                    category.categoryColor,
+                                    category.categoryClassColor,
                                     { '_active-category': category.text == categoryItemText },
                                 ]"
                                 @click="
@@ -229,7 +254,7 @@ provide('edit?', true)
                                     (newTask.topic = category.text))
                                 "
                             >
-                                <p :class="category.categoryColor">{{ category.text }}</p>
+                                <p :class="category.categoryClassColor">{{ category.text }}</p>
                             </div>
                         </div>
                     </div>

@@ -10,12 +10,13 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const id = computed(() => route.params.id)
 
-import { computed, ref, inject, provide } from 'vue'
+import { computed, ref, inject, provide, onMounted } from 'vue'
 import PreLoader from '@/components/PreLoader.vue'
 
 const loading = ref(false)
 
 const isDark = inject('theme')
+const addTaskCategory = inject('addTaskCategory')
 const { tasks } = inject('tasksData')
 console.log('TaskBrowse: tasks =', tasks)
 
@@ -32,6 +33,10 @@ const task = computed(() => {
         description: '',
     }
     return seekedTask
+})
+
+onMounted(() => {
+    addTaskCategory(tasks.value, isDark.value)
 })
 
 provide('taskDate', task.value.date)

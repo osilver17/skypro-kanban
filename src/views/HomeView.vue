@@ -3,7 +3,17 @@ import TaskDesk from '@/views/TaskDesk.vue'
 import BaseHeader from '@/views/BaseHeader.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { fetchTasks } from '@/services/api'
-import { inject, ref, onMounted, provide, computed, watch } from 'vue'
+import {
+    inject,
+    ref,
+    onMounted,
+    onBeforeUpdate,
+    onUpdated,
+    onBeforeMount,
+    provide,
+    computed,
+    watch,
+} from 'vue'
 import { deleteTask } from '@/services/api'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -78,7 +88,6 @@ function addTaskCategory(tasks, isDarkTheme) {
                 break
         }
     })
-    console.log('addTaskCategory: tasks =', tasks)
 }
 
 async function taskDeleter(event) {
@@ -127,16 +136,20 @@ async function getTasks() {
             token,
         })
         if (data) {
+            // Читаем тему
+            isDark.value = localStorage.getItem('theme')
+            console.log('HomeView getTasks: isDark.value = ', isDark.value)
             // Выясняем, что такое data
             console.log('data в HomeView =', data)
             // Забираем из data массив задач в состояние tasks
-            tasks.value = data.tasks
+            updateTasks(data.tasks)
+            // tasks.value = data.tasks
             console.log('HomeView: getTasks: tasks.value =', tasks.value)
             // Добавляем поля для рендеринга категорий
             addTaskCategory(tasks.value, isDark.value)
             // Заполняем массив данными
             arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
-            console.log('HomeView getTasks: arrsOfStatuses.value = ', arrsOfStatuses.value)
+            console.log('HomeView!?!?!?!? getTasks: arrsOfStatuses.value = ', arrsOfStatuses.value)
         }
     } catch (err) {
         console.log('err.message Home =', err.message)
@@ -148,18 +161,22 @@ async function getTasks() {
     }
 }
 
+watch(isDark, () => {
+    addTaskCategory(tasks.value, isDark.value)
+})
+
+onBeforeMount(() => console.log('HW: onBeforeMount: isDark.value =', isDark.value))
 // onMounted вызывается один раз
 onMounted(() => {
     console.log('onMounted запущен')
-    // Получаем тему из LocalStorage
-    isDark.value = localStorage.getItem('theme')
+    // Обновляем категории в соответствии с текущей темой
+    addTaskCategory(tasks.value, isDark.value)
     // Получаем задачи от сервера
     getTasks()
+    console.log('HW: onMounted: isDarkTheme =', isDark.value)
 })
-
-watch(isDark.value, () => {
-    addTaskCategory(tasks.value, isDark.value)
-})
+onBeforeUpdate(() => console.log('HW: onBeforeUpdate: isDark.value =', isDark.value))
+onUpdated(() => console.log('HW: onUpdated: isDark.value =', isDark.value))
 
 provide('tasksData', {
     tasks,
@@ -177,10 +194,6 @@ provide('addTaskCategory', addTaskCategory)
 <template>
     <PreLoader v-if="loading" />
     <div v-else :class="{ wrapper: !isDark, 'wrapper-dark': isDark }">
-        <!-- pop-up start-->
-
-        <!-- pop-up end-->
-
         <BaseHeader />
 
         <main :class="{ main: !isDark, 'main-dark': isDark }">
