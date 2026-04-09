@@ -1,10 +1,17 @@
 <script setup>
 defineProps({
-    cardId: String,
+    id: String,
     classColor: String,
-    date: String,
+    date: Date,
     topic: String,
 })
+
+// Опции для преобразования дат в задачах
+const dateOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+}
 </script>
 
 <template>
@@ -14,7 +21,7 @@ defineProps({
                 <div :class="['card__theme', classColor]">
                     <p :class="classColor">{{ topic }}</p>
                 </div>
-                <RouterLink :to="{ name: 'browse-card', params: { cardId } }">
+                <RouterLink :to="{ name: 'browse-card', params: { id } }">
                     <div class="card__btn">
                         <div></div>
                         <div></div>
@@ -55,7 +62,7 @@ defineProps({
                             </clipPath>
                         </defs>
                     </svg>
-                    <p>{{ date }}</p>
+                    <p>{{ date.toLocaleString('ru-RU', dateOptions) }}</p>
                 </div>
             </div>
         </div>
@@ -160,14 +167,29 @@ defineProps({
     color: #9a48f1;
 }
 
+._purple-dark {
+    background-color: #9a48f1;
+    color: #e9d4ff;
+}
+
 ._green {
     background-color: #b4fdd1;
     color: #06b16e;
 }
 
+._green-dark {
+    background-color: #06b16e;
+    color: #b4fdd1;
+}
+
 ._orange {
     background-color: #ffe4c2;
     color: #ff6d00;
+}
+
+._orange-dark {
+    background-color: #ff6d00;
+    color: #ffe4c2;
 }
 
 @media screen and (max-width: 1200px) {

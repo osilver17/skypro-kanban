@@ -1,32 +1,44 @@
 <script setup>
 import { ref } from 'vue'
 import UserSet from '@/views/UserSet.vue'
+import { inject } from 'vue'
+const { userInfo } = inject('auth')
+const isDark = inject('theme')
 
 const isVisible = ref('false')
 function showUserSet() {
     isVisible.value = !isVisible.value
 }
+
+function showUserName() {
+    if (!(userInfo.value === null)) {
+        return userInfo.value.name
+    }
+    return
+}
 </script>
 
 <template>
-    <header class="header">
+    <header :class="{ header: !isDark, 'header-dark': isDark }">
         <div class="container">
             <div class="header__block">
-                <div class="header__logo _show _light">
+                <div class="header__logo _show" :class="{ '_display-none': isDark }">
                     <a href="" target="_self"
-                        ><img src="../../public/assets/images/logo.png" alt="logo"
+                        ><img src="../../assets/images/logo.png" alt="logo"
                     /></a>
                 </div>
-                <div class="header__logo _dark">
+                <div class="header__logo _dark" :class="{ '_display-none': !isDark }">
                     <a href="" target="_self"
-                        ><img src="../../public/assets/images/logo_dark.png" alt="logo"
+                        ><img src="../../assets/images/logo_dark.png" alt="logo"
                     /></a>
                 </div>
                 <nav class="header__nav">
                     <button class="header__btn-main-new _hover01" id="btnMainNew">
                         <RouterLink to="/new-task">Создать новую задачу</RouterLink>
                     </button>
-                    <a href="#" class="header__user _hover02" @click="showUserSet">Ivan Ivanov</a>
+                    <a href="#" class="header__user _hover02" @click="showUserSet">{{
+                        showUserName()
+                    }}</a>
                     <UserSet v-show="!isVisible" />
                 </nav>
             </div>
@@ -46,6 +58,12 @@ function showUserSet() {
     width: 100%;
     margin: 0 auto;
     background-color: #ffffff;
+}
+
+.header-dark {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #20202c;
 }
 
 .header__block {
@@ -89,7 +107,7 @@ function showUserSet() {
     color: #ffffff;
 }
 
-._dark {
+._display-none {
     display: none;
 }
 

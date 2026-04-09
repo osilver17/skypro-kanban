@@ -1,28 +1,9 @@
 <script setup>
+import { inject } from 'vue'
 import TaskCard from './TaskCard.vue'
-import { cardsAllStatus } from '@/mocks/tasks'
 
-const cardsStatus = ['Без статуса', 'Нужно сделать', 'В работе', 'Тестирование', 'Готово']
-
-function tasksDistributionByColumns(statusArr, taskArr = []) {
-    const statusArrays = []
-    statusArr.forEach((element, id) => {
-        statusArrays[id] = taskArr.filter((item) => item.status === element)
-        if (statusArrays[id].length === 0) {
-            statusArrays[id].push({
-                _id: '0',
-                topic: '',
-                classColor: '',
-                title: 'Задач нет',
-                date: '',
-                status: '',
-            })
-        }
-    })
-    return statusArrays
-}
-
-const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
+const { arrsOfStatuses, cardsStatus } = inject('tasksData')
+console.log('TaskColumn: arrsOfStatuses.value = ', arrsOfStatuses.value)
 </script>
 
 <template>
@@ -32,11 +13,11 @@ const statusArrays = tasksDistributionByColumns(cardsStatus, cardsAllStatus)
         </div>
         <div class="cards">
             <TaskCard
-                :cardId="card._id"
+                v-for="card in arrsOfStatuses[index]"
+                :id="card._id"
                 :classColor="card.classColor"
                 :date="card.date"
                 :topic="card.topic"
-                v-for="card in statusArrays[index]"
                 :key="card._id"
                 >{{ card.title }}</TaskCard
             >

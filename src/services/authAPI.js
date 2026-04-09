@@ -27,10 +27,14 @@ export async function signIn(userData) {
                 "Content-Type": "",
             },
         });
+        console.log('signIn: data =', data);
         return data.data.user;
     } catch (error) {
-        console.log(error.response.data.error);
-        throw new Error(error.response.data.error, { cause: error });
+        console.log(error);
+        // console.log(error.response);
+        // console.log(error.response.data);
+        // console.log(error.response.data.error);
+        throw new Error(error.message, { cause: error });
     }
 }
 
