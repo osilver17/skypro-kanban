@@ -270,6 +270,7 @@ function errorClear() {
 }
 .modal__btn-signup-ent--error {
     background-color: rgba(148, 166, 190, 0.4);
+    cursor: default;
 }
 .modal__form-group {
     text-align: center;

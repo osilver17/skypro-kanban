@@ -15,6 +15,7 @@ import PreLoader from '@/components/PreLoader.vue'
 
 const loading = ref(false)
 
+const isDark = inject('theme')
 const { tasks } = inject('tasksData')
 console.log('TaskBrowse: tasks =', tasks)
 
@@ -98,12 +99,18 @@ provide('edit?', false)
                     </div>
                     <div class="pop-browse__btn-browse">
                         <div class="btn-group">
-                            <button class="btn-browse__edit _btn-bor _hover03">
+                            <button
+                                class="btn-browse__edit _btn-bor"
+                                :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                            >
                                 <RouterLink :to="{ name: 'edit-card', params: { id } }"
                                     >Редактировать задачу
                                 </RouterLink>
                             </button>
-                            <button class="btn-browse__delete _btn-bor _hover03">
+                            <button
+                                class="btn-browse__delete _btn-bor"
+                                :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                            >
                                 <a href="#" @click="taskDeleter">Удалить задачу</a>
                             </button>
                         </div>
@@ -116,10 +123,17 @@ provide('edit?', false)
                             <button class="btn-edit__edit _btn-bg _hover01">
                                 <a href="#">Сохранить</a>
                             </button>
-                            <button class="btn-edit__edit _btn-bor _hover03">
+                            <button
+                                class="btn-edit__edit _btn-bor"
+                                :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                            >
                                 <a href="#">Отменить</a>
                             </button>
-                            <button class="btn-edit__delete _btn-bor _hover03" id="btnDelete">
+                            <button
+                                class="btn-edit__delete _btn-bor"
+                                :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                                id="btnDelete"
+                            >
                                 <a href="#">Удалить задачу</a>
                             </button>
                         </div>
@@ -248,14 +262,29 @@ provide('edit?', false)
     color: #9a48f1;
 }
 
+._purple-dark {
+    background-color: #9a48f1;
+    color: #e9d4ff;
+}
+
 ._green {
     background-color: #b4fdd1;
     color: #06b16e;
 }
 
+._green-dark {
+    background-color: #06b16e;
+    color: #b4fdd1;
+}
+
 ._orange {
     background-color: #ffe4c2;
     color: #ff6d00;
+}
+
+._orange-dark {
+    background-color: #ff6d00;
+    color: #ffe4c2;
 }
 
 .status {
@@ -486,6 +515,14 @@ provide('edit?', false)
     color: #ffffff;
 }
 ._hover03:hover a {
+    color: #ffffff;
+}
+._hover03-dark:hover {
+    background-color: #565eef;
+    color: #ffffff;
+    border-color: #565eef;
+}
+._hover03-dark:hover a {
     color: #ffffff;
 }
 

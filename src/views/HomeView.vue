@@ -3,13 +3,14 @@ import TaskDesk from '@/views/TaskDesk.vue'
 import BaseHeader from '@/views/BaseHeader.vue'
 import PreLoader from '@/components/PreLoader.vue'
 import { fetchTasks } from '@/services/api'
-import { inject, ref, onMounted, provide, computed } from 'vue'
+import { inject, ref, onMounted, provide, computed, watch } from 'vue'
 import { deleteTask } from '@/services/api'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const id = computed(() => route.params.id)
 
+const isDark = inject('theme')
 const { userInfo } = inject('auth')
 const { loading } = inject('loading')
 const { error } = inject('loading')
@@ -60,23 +61,24 @@ const task = computed(() => {
 })
 
 // Функция, добавляющая поля для отрисовки категорий задач
-function addTaskCategory(tasks) {
+function addTaskCategory(tasks, isDarkTheme) {
     tasks.forEach((item) => {
         item.date = new Date(item.date)
         switch (item.topic) {
             case 'Web Design':
-                item.classColor = '_orange'
+                item.classColor = isDarkTheme ? '_orange-dark' : '_orange'
                 break
             case 'Research':
-                item.classColor = '_green'
+                item.classColor = isDarkTheme ? '_green-dark' : '_green'
                 break
             case 'Copywriting':
-                item.classColor = '_purple'
+                item.classColor = isDarkTheme ? '_purple-dark' : '_purple'
                 break
             default:
                 break
         }
     })
+    console.log('addTaskCategory: tasks =', tasks)
 }
 
 async function taskDeleter(event) {
@@ -98,7 +100,7 @@ async function taskDeleter(event) {
             tasks.value.length = 0
             tasks.value.push(...data.tasks)
 
-            addTaskCategory(tasks.value)
+            addTaskCategory(tasks.value, isDark.value)
             // Заполняем массив данными
             arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
 
@@ -131,7 +133,7 @@ async function getTasks() {
             tasks.value = data.tasks
             console.log('HomeView: getTasks: tasks.value =', tasks.value)
             // Добавляем поля для рендеринга категорий
-            addTaskCategory(tasks.value)
+            addTaskCategory(tasks.value, isDark.value)
             // Заполняем массив данными
             arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
             console.log('HomeView getTasks: arrsOfStatuses.value = ', arrsOfStatuses.value)
@@ -149,8 +151,14 @@ async function getTasks() {
 // onMounted вызывается один раз
 onMounted(() => {
     console.log('onMounted запущен')
+    // Получаем тему из LocalStorage
+    isDark.value = localStorage.getItem('theme')
     // Получаем задачи от сервера
     getTasks()
+})
+
+watch(isDark.value, () => {
+    addTaskCategory(tasks.value, isDark.value)
 })
 
 provide('tasksData', {
@@ -168,14 +176,14 @@ provide('addTaskCategory', addTaskCategory)
 
 <template>
     <PreLoader v-if="loading" />
-    <div v-else class="wrapper">
+    <div v-else :class="{ wrapper: !isDark, 'wrapper-dark': isDark }">
         <!-- pop-up start-->
 
         <!-- pop-up end-->
 
         <BaseHeader />
 
-        <main class="main">
+        <main :class="{ main: !isDark, 'main-dark': isDark }">
             <TaskDesk />
         </main>
         <RouterView />
@@ -191,8 +199,24 @@ provide('addTaskCategory', addTaskCategory)
     background-color: #f1f1f1;
 }
 
+.wrapper-dark {
+    max-width: 100%;
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: #151419;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
 .main {
     width: 100%;
     background-color: #eaeef6;
+}
+
+.main-dark {
+    width: 100%;
+    background-color: #151419;
 }
 </style>

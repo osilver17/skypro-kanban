@@ -14,6 +14,7 @@ const dateOptions = {
 const router = useRouter()
 
 const addTaskCategory = inject('addTaskCategory')
+const isDark = inject('theme')
 const { userInfo } = inject('auth')
 
 const loading = ref(false)
@@ -91,7 +92,7 @@ async function createNewTask(event) {
             },
         )
         if (data) {
-            addTaskCategory(data.tasks)
+            addTaskCategory(data.tasks, isDark.value)
             // console.log('!!!!!!!!! TC до апдейта: tasks.value =', tasks.value)
             updateTasks(data.tasks)
             // console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
@@ -419,14 +420,29 @@ select {
     color: #9a48f1;
 }
 
+._purple-dark {
+    background-color: #9a48f1;
+    color: #e9d4ff;
+}
+
 ._green {
     background-color: #b4fdd1;
     color: #06b16e;
 }
 
+._green-dark {
+    background-color: #06b16e;
+    color: #b4fdd1;
+}
+
 ._orange {
     background-color: #ffe4c2;
     color: #ff6d00;
+}
+
+._orange-dark {
+    background-color: #ff6d00;
+    color: #ffe4c2;
 }
 
 ._hover01:hover {

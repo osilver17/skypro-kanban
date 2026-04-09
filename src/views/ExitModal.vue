@@ -2,6 +2,7 @@
 import { RouterLink, useRouter } from 'vue-router'
 import { inject } from 'vue'
 
+const isDark = inject('theme')
 const { removeUser } = inject('auth')
 
 const router = useRouter()
@@ -25,8 +26,16 @@ function logout(e) {
                         <button class="pop-exit__exit-yes _hover01" id="exitYes">
                             <a href="#" @:click="logout">Да, выйти</a>
                         </button>
-                        <button class="pop-exit__exit-no _hover03" id="exitNo">
-                            <RouterLink to="/">Нет, остаться</RouterLink>
+                        <button
+                            class="pop-exit__exit-no"
+                            :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                            id="exitNo"
+                        >
+                            <RouterLink
+                                to="/"
+                                :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                                >Нет, остаться</RouterLink
+                            >
                         </button>
                     </div>
                 </form>
@@ -142,8 +151,11 @@ function logout(e) {
     background-color: #33399b;
     color: #ffffff;
 }
-._hover03:hover a {
+
+._hover03-dark:hover {
+    background-color: #565eef;
     color: #ffffff;
+    border-color: #565eef;
 }
 
 @media only screen and (max-width: 375px) {

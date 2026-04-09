@@ -10,12 +10,13 @@ import { useRoute, useRouter } from 'vue-router'
 import PreLoader from '@/components/PreLoader.vue'
 import { editTask } from '@/services/api.js'
 
-import { computed, inject, provide, ref, watch } from 'vue'
+import { computed, inject, provide, ref, watch, onMounted } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
 const id = computed(() => route.params.id)
 
+const isDark = inject('theme')
 const { userInfo } = inject('auth')
 const loading = ref(false)
 const error = ref('')
@@ -88,7 +89,7 @@ async function taskEditing(event) {
             task.value._id,
         )
         if (data) {
-            addTaskCategory(data.tasks)
+            addTaskCategory(data.tasks, isDark.value)
             updateTasks(data.tasks)
             console.log('!!!!!!!!! TC после апдейта: tasks.value =', tasks.value)
             arrsOfStatuses.value = tasksDistributionByColumns(cardsStatus, tasks.value)
@@ -107,6 +108,9 @@ function getDeadlineDate(date) {
 }
 provide('taskDate', task.value.date)
 provide('edit?', true)
+onMounted(() => {
+    addTaskCategory(tasks.value, isDark.value)
+})
 </script>
 
 <template>
@@ -173,10 +177,16 @@ provide('edit?', true)
                 </div>
                 <div class="pop-browse__btn-browse _hide">
                     <div class="btn-group">
-                        <button class="btn-browse__edit _btn-bor _hover03">
+                        <button
+                            class="btn-browse__edit _btn-bor"
+                            :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                        >
                             <a href="#">Редактировать задачу</a>
                         </button>
-                        <button class="btn-browse__delete _btn-bor _hover03">
+                        <button
+                            class="btn-browse__delete _btn-bor"
+                            :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                        >
                             <a href="#" @click="taskDeleter">Удалить задачу</a>
                         </button>
                     </div>
@@ -189,10 +199,17 @@ provide('edit?', true)
                         <button class="btn-edit__edit _btn-bg _hover01">
                             <a href="#" @click="taskEditing">Сохранить</a>
                         </button>
-                        <button class="btn-edit__edit _btn-bor _hover03">
+                        <button
+                            class="btn-edit__edit _btn-bor"
+                            :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                        >
                             <a href="#" @click="editingCansell">Отменить</a>
                         </button>
-                        <button class="btn-edit__delete _btn-bor _hover03" id="btnDelete">
+                        <button
+                            class="btn-edit__delete _btn-bor"
+                            :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+                            id="btnDelete"
+                        >
                             <a href="#" @click="taskDeleter">Удалить задачу</a>
                         </button>
                     </div>
@@ -359,14 +376,29 @@ provide('edit?', true)
     color: #9a48f1;
 }
 
+._purple-dark {
+    background-color: #9a48f1;
+    color: #e9d4ff;
+}
+
 ._green {
     background-color: #b4fdd1;
     color: #06b16e;
 }
 
+._green-dark {
+    background-color: #06b16e;
+    color: #b4fdd1;
+}
+
 ._orange {
     background-color: #ffe4c2;
     color: #ff6d00;
+}
+
+._orange-dark {
+    background-color: #ff6d00;
+    color: #ffe4c2;
 }
 
 .status {
@@ -598,6 +630,14 @@ provide('edit?', true)
     color: #ffffff;
 }
 ._hover03:hover a {
+    color: #ffffff;
+}
+._hover03-dark:hover {
+    background-color: #565eef;
+    color: #ffffff;
+    border-color: #565eef;
+}
+._hover03-dark:hover a {
     color: #ffffff;
 }
 

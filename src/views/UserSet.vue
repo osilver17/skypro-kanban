@@ -1,7 +1,22 @@
 <script setup>
 import { inject } from 'vue'
 const { userInfo } = inject('auth')
+const isDark = inject('theme')
 console.log('userInfo.value =', userInfo.value)
+
+function toggleTheme() {
+    isDark.value = !isDark.value
+    localStorage.setItem('theme', isDark.value)
+    if (isDark.value) {
+        document.getElementsByTagName('html')[0].style.color = '#ffffff'
+        document.body.style.color = '#ffffff'
+    } else {
+        document.getElementsByTagName('html')[0].style.color = '#000000'
+        document.body.style.color = '#000000'
+    }
+    console.log('toggleTheme: isDark.value =', isDark.value)
+}
+
 function showUserName() {
     if (!(userInfo.value === null)) {
         return userInfo.value.name
@@ -24,15 +39,22 @@ function showUserLogin() {
         <p class="pop-user-set__mail">{{ showUserLogin() }}</p>
         <div class="pop-user-set__theme">
             <p>Темная тема</p>
-            <input type="checkbox" class="checkbox" name="checkbox" />
+            <input type="checkbox" class="checkbox" name="checkbox" @click="toggleTheme" />
         </div>
-        <button type="button" class="_hover03" @click="!isVisible">
+        <button
+            type="button"
+            :class="{ _hover03: !isDark, '_hover03-dark': isDark }"
+            @click="!isVisible"
+        >
             <RouterLink to="/exit">Выйти</RouterLink>
         </button>
     </div>
 </template>
 
 <style scoped>
+.checkbox {
+    cursor: pointer;
+}
 .header__pop-user-set {
     position: absolute;
     top: 61px;
@@ -121,6 +143,14 @@ function showUserLogin() {
     color: #ffffff;
 }
 ._hover03:hover a {
+    color: #ffffff;
+}
+._hover03-dark:hover {
+    background-color: #565eef;
+    color: #ffffff;
+    border-color: #565eef;
+}
+._hover03-dark:hover a {
     color: #ffffff;
 }
 </style>

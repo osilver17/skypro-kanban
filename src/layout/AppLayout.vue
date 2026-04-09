@@ -4,6 +4,8 @@
 
 <script setup>
 import { provide, ref } from 'vue'
+// Устанавливаем начальную тему приложения
+const isDark = ref(false)
 
 // Флаг загрузки
 const loading = ref(false)
@@ -15,7 +17,7 @@ const userInfo = ref(null)
 userInfo.value = JSON.parse(localStorage.getItem('userInfo'))
 
 // Передаём всем потомкам главной страницы данные
-
+provide('theme', isDark)
 provide('loading', { loading, error })
 
 provide('auth', {
@@ -47,4 +49,4 @@ function removeUserInfo() {
 }
 </script>
 
-<style scoped></style>
+<style></style>

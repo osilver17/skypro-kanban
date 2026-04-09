@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import UserSet from '@/views/UserSet.vue'
 import { inject } from 'vue'
 const { userInfo } = inject('auth')
+const isDark = inject('theme')
 
 const isVisible = ref('false')
 function showUserSet() {
@@ -18,15 +19,15 @@ function showUserName() {
 </script>
 
 <template>
-    <header class="header">
+    <header :class="{ header: !isDark, 'header-dark': isDark }">
         <div class="container">
             <div class="header__block">
-                <div class="header__logo _show _light">
+                <div class="header__logo _show" :class="{ '_display-none': isDark }">
                     <a href="" target="_self"
                         ><img src="../../assets/images/logo.png" alt="logo"
                     /></a>
                 </div>
-                <div class="header__logo _dark">
+                <div class="header__logo _dark" :class="{ '_display-none': !isDark }">
                     <a href="" target="_self"
                         ><img src="../../assets/images/logo_dark.png" alt="logo"
                     /></a>
@@ -57,6 +58,12 @@ function showUserName() {
     width: 100%;
     margin: 0 auto;
     background-color: #ffffff;
+}
+
+.header-dark {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #20202c;
 }
 
 .header__block {
@@ -100,7 +107,7 @@ function showUserName() {
     color: #ffffff;
 }
 
-._dark {
+._display-none {
     display: none;
 }
 
